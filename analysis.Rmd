@@ -67,7 +67,7 @@ summary(modfaminc1)
 
 ## Best Subsets
 
-```{r}
+```{r} 
 library(car)
 collegescorecard%>%
   select(MD_FAMINC,ADM_RATE_ALL,C150_4,TUITFTE,TUITIONFEE_OUT,TUITIONFEE_IN,SAT_AVG,GRAD_DEBT_MDN_SUPP)%>%
