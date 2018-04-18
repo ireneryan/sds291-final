@@ -37,6 +37,37 @@ collegescorecard<- collegescorecard%>% mutate(SCH_DEG=as.factor(SCH_DEG), PREDDE
 
 ```
 
+```{r}
+model<-lm(MN_EARN_WNE_P10~MD_FAMINC+PCTPELL+GRAD_DEBT_MDN10YR_SUPP+ADM_RATE+LO_INC_RPY_3YR_RT_SUPP, data=collegescorecard)
+
+repaymentmod<-lm(MN_EARN_WNE_P10~MALE_RPY_3YR_RT_SUPP+FEMALE_RPY_3YR_RT_SUPP+FIRSTGEN_RPY_3YR_RT_SUPP+HI_INC_RPY_3YR_RT_SUPP+LO_INC_RPY_3YR_RT_SUPP+IND_RPY_3YR_RT_SUPP+NONCOM_RPY_3YR_RT_SUPP, data=collegescorecard)
+
+repay<-lm(MN_EARN_WNE_P10~HI_INC_RPY_3YR_RT_SUPP+LO_INC_RPY_3YR_RT_SUPP+IND_RPY_3YR_RT_SUPP, data=collegescorecard)
+
+anova(repay)
+
+anova(repaymentmod)
+
+plot(repay)
+
+summary(repaymentmod)
+summary(model)
+
+collegescorecard%>%
+  select(FAMINC, HI_INC_RPY_3YR_RT_SUPP)%>%
+  cor()
+
+library(ggplot2)
+ggplot(data=collegescorecard, aes(x=FAMINC, y=HI_INC_RPY_3YR_RT_SUPP))+
+  geom_point()
+```
+
+```{r}
+
+
+```
+
+
 ## Explanatory Variables: 
 
 Mean family income: quantitative Unit: dollars
@@ -56,4 +87,18 @@ Represents the sum of all undergraduate federal loans over students’ college e
 $16,000 for that institution. 
 
 School Type: categorical Categories: private, public, trade
+
+
+https://www.aauw.org/research/deeper-in-debt/
+
+
+
+
+
+
+
+
+
+
+
 
