@@ -37,7 +37,23 @@ collegescorecard<- collegescorecard%>% mutate(SCH_DEG=as.factor(SCH_DEG), PREDDE
 
 ```
 
+## Explanatory Variables: 
 
-Hey guys!
+Mean family income: quantitative Unit: dollars
+Using data from NSLDS, these elements calculate the percentage of Title IV-receiving students who had family income data from the Free Application for Federal Student Aid (FAFSA) for each of five income quintiles.
 
+Tuition cost: quantitative Unit: dollars
+Includes tuition and fees, books, and supplies, and living expenses for all full-time, first-time, degree/certificate-seeking undergraduates who receive Title IV aid.
+
+Percent of students on Pell grants: quantitative Unit: percent
+Calculated from values from the IPEDS Student Financial Aid Component.
+
+Percent of students receiving federal loan: quantitative Unit: percent
+Calculated from values from the IPEDS Student Financial Aid Component
+
+Cumulative mean debt: quantitative Unit: dollars 
+Represents the sum of all undergraduate federal loans over students’ college education at the institution for which the median debt is reported for —e.g., if a student receives a federal loan for $2,000 for each of eight semesters at one institution, their cumulative debt is recorded as 
+$16,000 for that institution. 
+
+School Type: categorical Categories: private, public, trade
 
