@@ -36,3 +36,8 @@ collegescorecard <- read_csv("group-h-csv.csv", na = c("", "NA", "NULL", "Privac
 collegescorecard<- collegescorecard%>% mutate(SCH_DEG=as.factor(SCH_DEG), PREDDEG=as.factor(PREDDEG), HIGHDEG=as.factor(HIGHDEG), CONTROL=as.factor(CONTROL)) 
 
 ```
+
+
+Hey guys!
+
+
