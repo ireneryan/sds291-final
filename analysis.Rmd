@@ -57,3 +57,20 @@ $16,000 for that institution.
 
 School Type: categorical Categories: private, public, trade
 
+### Model Attempt: FamInc
+
+```{r}
+modfaminc1<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+C150_4+HIGHDEG+TUITFTE+TUITIONFEE_OUT+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP, data=collegescorecard)
+summary(modfaminc1)
+```
+
+
+## Best Subsets
+
+```{r}
+library(car)
+collegescorecard%>%
+  select(MD_FAMINC,ADM_RATE_ALL,C150_4,TUITFTE,TUITIONFEE_OUT,TUITIONFEE_IN,SAT_AVG,GRAD_DEBT_MDN_SUPP)%>%
+  cor()
+```
+
