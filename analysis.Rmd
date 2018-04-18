@@ -109,12 +109,12 @@ https://www.aauw.org/research/deeper-in-debt/
 ### Model Attempt: FamInc
 
 ```{r}
-modfaminc1<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+C150_4+HIGHDEG+TUITFTE+TUITIONFEE_OUT+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP, data=collegescorecard)
+modfaminc1<- lm(MN_EARN_WNE_P10~MD_FAMINC+SCH_DEG+ADM_RATE_ALL+C150_4+HIGHDEG+TUITFTE+TUITIONFEE_OUT+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
 summary(modfaminc1)
 ```
 
 
-## Best Subsets
+## Attempt a Correlation Matrix
 
 ```{r} 
 library(car)
