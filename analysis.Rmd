@@ -38,6 +38,22 @@ collegescorecard<- collegescorecard%>% mutate(SCH_DEG=as.factor(SCH_DEG), PREDDE
 ```
 
 ```{r}
+library(ggplot2)
+library(ggmap)
+library(maps)
+
+statedata<-collegescorecard%>%
+  group_by(STABBR)%>%
+  summarise(total=mean(MN_EARN_WNE_P10, na.rm=TRUE))
+
+
+ggplot(data=statedata, aes(x=STABBR, y=total))+
+  geom_point()
+
+```
+
+
+```{r}
 model<-lm(MN_EARN_WNE_P10~MD_FAMINC+PCTPELL+GRAD_DEBT_MDN10YR_SUPP+ADM_RATE+LO_INC_RPY_3YR_RT_SUPP, data=collegescorecard)
 
 repaymentmod<-lm(MN_EARN_WNE_P10~MALE_RPY_3YR_RT_SUPP+FEMALE_RPY_3YR_RT_SUPP+FIRSTGEN_RPY_3YR_RT_SUPP+HI_INC_RPY_3YR_RT_SUPP+LO_INC_RPY_3YR_RT_SUPP+IND_RPY_3YR_RT_SUPP+NONCOM_RPY_3YR_RT_SUPP, data=collegescorecard)
@@ -58,15 +74,11 @@ collegescorecard%>%
   cor()
 
 library(ggplot2)
-ggplot(data=collegescorecard, aes(x=FAMINC, y=HI_INC_RPY_3YR_RT_SUPP))+
-  geom_point()
+ggplot(data=collegescorecard, aes(x=FAMINC))+
+  geom_point(aes(y=HI_INC_RPY_3YR_RT_SUPP, color="HI_INC_RPY_3YR_RT_SUPP"))+
+  geom_point(aes(y=LO_INC_RPY_3YR_RT_SUPP, color="LO_INC_RPY_3YR_RT_SUPP"))+
+  geom_point(aes(y=IND_RPY_3YR_RT_SUPP, color="IND_RPY_3YR_RT_SUPP"))
 ```
-
-```{r}
-
-
-```
-
 
 ## Explanatory Variables: 
 
@@ -88,18 +100,9 @@ $16,000 for that institution.
 
 School Type: categorical Categories: private, public, trade
 
-<<<<<<< HEAD
-
-https://www.aauw.org/research/deeper-in-debt/
 
 
-
-
-
-
-
-
-
+https://www.aauw.org/research/deeper-in-debt/ 
 
 
 =======
@@ -119,5 +122,32 @@ collegescorecard%>%
   select(MD_FAMINC,ADM_RATE_ALL,C150_4,TUITFTE,TUITIONFEE_OUT,TUITIONFEE_IN,SAT_AVG,GRAD_DEBT_MDN_SUPP)%>%
   cor()
 ```
+
+Questions: 
+
+cor() returning all NA?
+
+
+
+
+Goals: 
+
+stepwise to choose variables
+pare down data to use a best subsets
+Look at correlations
+See what transformations we need to make in the data (EX: for debt repayment vs median earnings after 10 years, logistic?)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
