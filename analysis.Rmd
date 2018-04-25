@@ -69,10 +69,6 @@ plot(repay)
 summary(repaymentmod)
 summary(model)
 
-collegescorecard%>%
-  select(FAMINC, HI_INC_RPY_3YR_RT_SUPP)%>%
-  cor()
-
 library(ggplot2)
 ggplot(data=collegescorecard, aes(x=FAMINC))+
   geom_point(aes(y=HI_INC_RPY_3YR_RT_SUPP, color="HI_INC_RPY_3YR_RT_SUPP"))+
