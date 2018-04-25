@@ -109,25 +109,40 @@ https://www.aauw.org/research/deeper-in-debt/
 ### Model Attempt: FamInc
 
 ```{r}
-mod1<- lm(MN_EARN_WNE_P10~MD_FAMINC+SCH_DEG+ADM_RATE_ALL+C150_4+HIGHDEG+TUITFTE+TUITIONFEE_OUT+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+mod1<- lm(MN_EARN_WNE_P10~MD_FAMINC+SCH_DEG+ADM_RATE_ALL+C150_4+HIGHDEG+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
 summary(mod1)
 ```
+
+
 ```{r}
-mod2<- lm(MN_EARN_WNE_P10~MD_FAMINC+SCH_DEG+ADM_RATE_ALL+C150_4+TUITFTE+TUITIONFEE_OUT+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+modcor<-lm(TUITIONFEE_IN~TUITIONFEE_OUT, data=collegescorecard)
+summary(modcor)
+```
+
+```{r}
+modcor2<-lm(SCH_DEG~HIGHDEG, data=collegescorecard)
+modcor2
+```
+
+
+
+
+```{r}
+mod2<- lm(MN_EARN_WNE_P10~MD_FAMINC+SCH_DEG+ADM_RATE_ALL+HIGHDEG+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
 summary(mod2)
 ```
 ```{r}
-mod3<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+C150_4+TUITFTE+TUITIONFEE_OUT+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+mod3<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+C150_4+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
 summary(mod3)
 ```
 
 ```{r}
-mod4<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+TUITFTE+TUITIONFEE_OUT+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+mod4<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
 summary(mod4)
 ```
 
 ```{r}
-mod5<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+TUITFTE+TUITIONFEE_OUT+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+mod5<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
 summary(mod5)
 ```
 
@@ -156,16 +171,32 @@ Not too bad!
 
 ## Attempt a Correlation Matrix
 
-```{r} 
+We first attempted a correlation matrix using the following code, which was unsuccessful:
+```{r, eval=FALSE} 
 library(car)
 collegescorecard%>%
   select(MD_FAMINC, ADM_RATE_ALL,TUITFTE,TUITIONFEE_OUT,TUITIONFEE_IN,SAT_AVG,GRAD_DEBT_MDN_SUPP,COSTT4_A,PCTPELL,RPY_3YR_RT_SUPP)%>%
   cor()
 ```
 
-Questions: 
+Next we attempted a correlation matrix using the following code, which was successful, but the number of variables made the plot difficult to read.
 
-cor() returning all NA?
+** Warning: This code takes a long time to run!:** If you want to knit without running it, put "{r, eval=FALSE}" where it normally says "{r}".
+
+```{r}
+library(GGally)
+ggpairs(mod1)
+```
+
+I used a GGPairs plot to look for multicolinearity in our model. The plot was difficult to visualize because we had so many variables in the initial model, but I think that it's important to start by looking at all of the variables if we are using backwards selection based on p-values. P-values are less reliable when multicolinearity is suspected. 
+
+I tried to visualize the plot by downloading it as a png file, but that didn't make it easier to read. 
+
+```{r}
+library(GGally)
+ggpairs(mod7)
+```
+
 
 
 
