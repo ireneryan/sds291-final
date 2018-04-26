@@ -163,21 +163,9 @@ plot(residuals(mod7)~fitted(mod7))
   hist(residuals(mod7))
 ```
 
-Not too bad!
-
-## Attempt a Correlation Matrix
-
-We first attempted a correlation matrix using the following code, which was unsuccessful:
-```{r, eval=FALSE} 
-library(car)
-collegescorecard%>%
-  select(MD_FAMINC, ADM_RATE_ALL,TUITFTE,TUITIONFEE_OUT,TUITIONFEE_IN,SAT_AVG,GRAD_DEBT_MDN_SUPP,COSTT4_A,PCTPELL,RPY_3YR_RT_SUPP)%>%
-  cor()
-```
-
-Next we attempted a correlation matrix using the following code, which was successful, but the number of variables made the plot difficult to read.
-
 ** Warning: This code takes a long time to run!:** If you want to knit without running it, put "{r, eval=FALSE}" where it normally says "{r}".
+
+##Correlation Matrix
 
 ```{r}
 library(GGally)
@@ -191,18 +179,9 @@ I tried to visualize the plot by downloading it as a png file, but that didn't m
 ```{r}
 library(GGally)
 ggpairs(mod7)
+plot(mod7)
 ```
 
-
-
-
-
-Goals: 
-
-stepwise to choose variables
-pare down data to use a best subsets
-Look at correlations
-See what transformations we need to make in the data (EX: for debt repayment vs median earnings after 10 years, logistic?)
 
 
 
