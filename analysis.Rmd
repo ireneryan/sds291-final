@@ -104,63 +104,84 @@ https://www.aauw.org/research/deeper-in-debt/
 =======
 ### Model Attempt: FamInc
 
-```{r}
-mod1<- lm(MN_EARN_WNE_P10~MD_FAMINC+SCH_DEG+ADM_RATE_ALL+C150_4+HIGHDEG+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
-summary(mod1)
-```
-
 
 ```{r}
 modcor<-lm(TUITIONFEE_IN~TUITIONFEE_OUT, data=collegescorecard)
 summary(modcor)
 ```
 
+Out of state tuition was removed from the model because it was highly multicolinear with in state tuition. No other significant multicolinarity ($R^2>0.8$) was found.
+
 ```{r}
-modcor2<-lm(SCH_DEG~HIGHDEG, data=collegescorecard)
-modcor2
+mod1<- lm(MN_EARN_WNE_P10~MD_FAMINC+SCH_DEG+ADM_RATE_ALL+C150_4+HIGHDEG+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+summary(mod1)
 ```
 
-
-
+C150_4 was removed because it had the largest p-value.
 
 ```{r}
 mod2<- lm(MN_EARN_WNE_P10~MD_FAMINC+SCH_DEG+ADM_RATE_ALL+HIGHDEG+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
 summary(mod2)
 ```
+Median Grad debt was removed from the model. p=0.81865
+
 ```{r}
-mod3<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+C150_4+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+mod3<- lm(MN_EARN_WNE_P10~MD_FAMINC+SCH_DEG+ADM_RATE_ALL+HIGHDEG+TUITFTE+TUITIONFEE_IN+SAT_AVG+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
 summary(mod3)
 ```
 
-```{r}
-mod4<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
-summary(mod4)
-```
+Most common degree awarded was removed from the model.
 
 ```{r}
-mod5<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+mod4<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+HIGHDEG+TUITFTE+TUITIONFEE_IN+SAT_AVG+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+summary(mod4)
+```
+In state tuition was removed.
+
+```{r}
+mod5<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+HIGHDEG+TUITFTE+SAT_AVG+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
 summary(mod5)
 ```
 
+PFTFAC was removed
+
 ```{r}
-mod6<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+TUITFTE+TUITIONFEE_OUT+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PCTPELL+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+mod6<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+HIGHDEG+TUITFTE+SAT_AVG+COSTT4_A+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
 summary(mod6)
 ```
+NPT4_PUB
+
 ```{r}
-mod7<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+TUITFTE+TUITIONFEE_OUT+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PCTPELL+RPY_3YR_RT_SUPP, data=collegescorecard)
+mod7<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+HIGHDEG+TUITFTE+SAT_AVG+COSTT4_A+PCTPELL+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
 summary(mod7)
 ```
+COST4_A
 
-Based on Model 7, median family income, admit rate, tuition fees (including in and out of state tuition), average SAT score, median grad debt, percent of students receiving pell grants, cost, and 3 year repayment rate are all significantly associated with mean earnings 10 years after graduation.
+
+```{r}
+mod8<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+HIGHDEG+TUITFTE+SAT_AVG+PCTPELL+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+summary(mod8)
+```
+
+Highdeg
+
+```{r}
+mod9<- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+TUITFTE+SAT_AVG+PCTPELL+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+summary(mod9)
+```
+
+
+
+Based on Model 9, median family income, admit rate, tuition revenue per full time student, average SAT score, percent of students receiving pell grants, percent of students receiving federal loans, and 3 year repayment rate are all significantly associated with mean earnings 10 years after graduation.
 
 ## Assessing Conditions for Regression:
 
 ```{r}
-qqnorm(residuals(mod7))
-  qqline(residuals(mod7))
-plot(residuals(mod7)~fitted(mod7))
+qqnorm(residuals(mod9))
+  qqline(residuals(mod9))
+plot(residuals(mod9)~fitted(mod9))
   abline(h=0)
-  hist(residuals(mod7))
+  hist(residuals(mod9))
 ```
 
 ** Warning: This code takes a long time to run!:** If you want to knit without running it, put "{r, eval=FALSE}" where it normally says "{r}".
