@@ -44,6 +44,7 @@ collegescorecard<- collegescorecard%>% mutate(SCH_DEG=as.factor(SCH_DEG), PREDDE
 library(leaps)
 full <- lm(MN_EARN_WNE_P10~MD_FAMINC+SCH_DEG+ADM_RATE_ALL+C150_4+HIGHDEG+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
 null <- lm(MN_EARN_WNE_P10~1, data=collegescorecard)
+fullMSE<-(summary(full)$sigma)^2 
 step(full, data=collegescorecard,
      scale=fullMSE, direction="backward")
 ```
