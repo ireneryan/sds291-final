@@ -56,6 +56,15 @@ step(full, data=nonadata,
      scale=fullMSE, direction="backward")
 ```
 
+#Stepwise
+
+```{r}
+step(null, data=collegescorecard, scope=list(lower=null, upper=full),
+     scale=fullMSE, direction="both")
+
+```
+
+
 model summary
 ```{r}
 finalmod<-lm(formula = MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 + 
