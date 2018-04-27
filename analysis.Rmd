@@ -188,7 +188,7 @@ plot(residuals(mod9)~fitted(mod9))
 
 ##Correlation Matrix
 
-```{r}
+```{r, eval=FALSE}
 library(GGally)
 ggpairs(mod1)
 ```
@@ -197,10 +197,20 @@ I used a GGPairs plot to look for multicolinearity in our model. The plot was di
 
 I tried to visualize the plot by downloading it as a png file, but that didn't make it easier to read. 
 
-```{r}
+```{r, eval=FALSE}
 library(GGally)
 ggpairs(mod7)
 plot(mod7)
+```
+
+
+Attempting another kind of selection:
+```{r}
+library(leaps)
+full <- lm(MN_EARN_WNE_P10~MN_EARN_WNE_P10~MD_FAMINC+SCH_DEG+ADM_RATE_ALL+C150_4+HIGHDEG+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+null <- lm(MN_EARN_WNE_P10~1, data=collegescorecard)
+step(null, data=collegescorecard, scope=list(lower=null, upper=mod1),
+     scale=fullMSE, direction="both")
 ```
 
 
