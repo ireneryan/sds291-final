@@ -10,69 +10,136 @@ library(readr)
 collegescorecard <- read_csv("group-h-csv.csv", na = c("", "NA", "NULL", "PrivacySuppressed"),
     col_types = cols(ADM_RATE = col_number(), 
         ADM_RATE_ALL = col_number(), C150_4 = col_number(), 
-        COMPL_RPY_3YR_RT_SUPP = col_number(), 
         CONTROL = col_character(), COSTT4_A = col_number(), 
-        DEP_RPY_3YR_RT_SUPP = col_number(), 
-        FAMINC = col_number(), FEMALE_RPY_3YR_RT_SUPP = col_number(), 
-        FIRSTGEN_RPY_3YR_RT_SUPP = col_number(), 
+        FAMINC = col_number(),
         GRAD_DEBT_MDN10YR_SUPP = col_number(), 
         GRAD_DEBT_MDN_SUPP = col_number(), 
-        HIGHDEG = col_character(), HI_INC_RPY_3YR_RT_SUPP = col_number(), 
-        ICLEVEL = col_character(), IND_RPY_3YR_RT_SUPP = col_number(), 
-        LO_INC_RPY_3YR_RT_SUPP = col_number(), 
-        MALE_RPY_3YR_RT_SUPP = col_number(), 
+        ICLEVEL = col_character(), 
         MD_EARN_WNE_P10 = col_number(), MD_FAMINC = col_number(), 
-        MD_INC_RPY_3YR_RT_SUPP = col_number(), 
-        MN_EARN_WNE_P10 = col_number(), NONCOM_RPY_3YR_RT_SUPP = col_number(), 
-        NOPELL_RPY_3YR_RT_SUPP = col_number(), 
-        NOTFIRSTGEN_RPY_3YR_RT_SUPP = col_number(), 
+        MN_EARN_WNE_P10 = col_number(),  
         NPT4_PRIV = col_number(), NPT4_PUB = col_number(), 
         OPEID = col_character(), PCTFLOAN = col_number(), 
-        PCTPELL = col_number(), PELL_RPY_3YR_RT_SUPP = col_number(), 
+        PCTPELL = col_number(),  
         PFTFAC = col_number(), PREDDEG = col_character(), 
         RPY_3YR_RT_SUPP = col_number(), SAT_AVG = col_number(), 
-        TUITFTE = col_number(), TUITIONFEE_IN = col_number(), 
-        TUITIONFEE_OUT = col_number(), UNITID = col_character()))
-
-collegescorecard<- collegescorecard%>% mutate(SCH_DEG=as.factor(SCH_DEG), PREDDEG=as.factor(PREDDEG), HIGHDEG=as.factor(HIGHDEG), CONTROL=as.factor(CONTROL), ICLEVEL = as.factor(ICLEVEL)) 
+        UNITID = col_character()))
 ```
 
+#Data set
+##Removed the NA values in order to do predictor selection
 
-### Backward Selection:
-
-
-#Removing na data: 
 ```{r}
-nonadata <- na.omit(collegescorecard[c("MN_EARN_WNE_P10","MD_FAMINC","SCH_DEG","ADM_RATE_ALL","C150_4","HIGHDEG","SAT_AVG","GRAD_DEBT_MDN_SUPP","COSTT4_A","PFTFAC","PCTPELL","NPT4_PUB","PCTFLOAN","RPY_3YR_RT_SUPP")])
+collegescorecard<- collegescorecard%>% 
+  select(ADM_RATE, ADM_RATE_ALL, C150_4, CONTROL, COSTT4_A, FAMINC, GRAD_DEBT_MDN10YR_SUPP, GRAD_DEBT_MDN_SUPP, ICLEVEL, MD_EARN_WNE_P10, MD_FAMINC, MN_EARN_WNE_P10, NPT4_PRIV, NPT4_PUB, OPEID, PCTFLOAN, PCTPELL, PFTFAC, SAT_AVG, UNITID) %>%
+  mutate( CONTROL=as.factor(CONTROL), ICLEVEL = as.factor(ICLEVEL)) 
+
+nonadata <- na.omit(collegescorecard[c("MN_EARN_WNE_P10","MD_FAMINC","ADM_RATE_ALL","C150_4","SAT_AVG","GRAD_DEBT_MDN_SUPP","COSTT4_A","PFTFAC","PCTPELL","NPT4_PUB","PCTFLOAN", "CONTROL")])
 ```
 
-#backward elim
+
+#Multicollinearity: we will use COSTT4_A (average annual cost of tuition)
+
+```{r}
+nonadata%>%
+  select(COSTT4_A, NPT4_PUB)%>%
+  cor()
+```
+
+#Backward Elimination
 ```{r}
 library(leaps)
-full <- lm(MN_EARN_WNE_P10~MD_FAMINC+ADM_RATE_ALL+C150_4+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN, data=nonadata)
+full <- lm(MN_EARN_WNE_P10~MD_FAMINC+
+          ADM_RATE_ALL+
+             C150_4+
+             SAT_AVG
+           +GRAD_DEBT_MDN_SUPP
+           +COSTT4_A
+           +PFTFAC+
+             PCTPELL+
+             PCTFLOAN, data=nonadata)
+
 null <- lm(MN_EARN_WNE_P10~1, data=nonadata)
+
 fullMSE<-(summary(full)$sigma)^2 
+
 step(full, data=nonadata,
      scale=fullMSE, direction="backward")
 ```
 
-#Stepwise
-
 ```{r}
-step(null, data=collegescorecard, scope=list(lower=null, upper=full),
-     scale=fullMSE, direction="both")
+step(full, data=nonadata,
+     scale=fullMSE, direction="forward")
 
 ```
 
+
+
+#Stepwise: gives same model
+
+```{r}
+step(null, data=nonadata, scope=list(lower=null, upper=full),
+     scale=fullMSE, direction="both")
+```
 
 model summary
 ```{r}
-finalmod<-lm(formula = MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 + 
+backwardmod<-lm(formula = MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 + 
     SAT_AVG + COSTT4_A + PCTFLOAN, data = nonadata)
-summary(finalmod)
 
-famincmod<-lm(MN_EARN_WNE_P10~MD_FAMINC, data=nonadata)
-summary(famincmod)
+summary(backwardmod)
+
+stepmod<-lm(formula = MN_EARN_WNE_P10 ~ C150_4 + PCTFLOAN + COSTT4_A + 
+    MD_FAMINC + ADM_RATE_ALL + SAT_AVG, data = nonadata)
+
+summary(stepmod)
 ```
+
+#Low R^2
+
+
+
+#Checking Conditions
+
+##Good equal variance/linearity, Normality is not met (should we transform?)
+##Assuming independence because it's self reported, but schools near each other may have effects?
+
+```{r}
+plot(backwardmod)
+```
+
+#ANOVA
+
+```{r}
+anova(backwardmod)
+```
+
+#Nested F Test: testing subset of percent on pell and percent on a federal loan
+
+```{r}
+modelf<-lm(formula = MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 + 
+    SAT_AVG + COSTT4_A + PCTFLOAN + PCTPELL, data = nonadata)
+  
+modelr<-lm(formula = MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 + 
+    SAT_AVG + COSTT4_A, data = nonadata)
+
+anova(modelr, modelf)
+```
+
+#Individual t-tests for variables we thought would be significant but were not in the model
+
+##Percent of full-time faculty
+```{r}
+pftfacmod<-lm(MN_EARN_WNE_P10~PFTFAC, data=nonadata)
+summary(pftfacmod)
+```
+
+
+
+
+#Test its effectiveness of the model for some schools in our towns?
+
+#ANOVA test about the different means of the debt repayment groups? If we want to
+
+
 
 
