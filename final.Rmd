@@ -1,0 +1,49 @@
+---
+title: ''
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readr)
+collegescorecard <- read_csv("group-h-csv.csv", na = c("", "NA", "NULL", "PrivacySuppressed"),
+    col_types = cols(ADM_RATE = col_number(), 
+        ADM_RATE_ALL = col_number(), C150_4 = col_number(), 
+        COMPL_RPY_3YR_RT_SUPP = col_number(), 
+        CONTROL = col_character(), COSTT4_A = col_number(), 
+        DEP_RPY_3YR_RT_SUPP = col_number(), 
+        FAMINC = col_number(), FEMALE_RPY_3YR_RT_SUPP = col_number(), 
+        FIRSTGEN_RPY_3YR_RT_SUPP = col_number(), 
+        GRAD_DEBT_MDN10YR_SUPP = col_number(), 
+        GRAD_DEBT_MDN_SUPP = col_number(), 
+        HIGHDEG = col_character(), HI_INC_RPY_3YR_RT_SUPP = col_number(), 
+        ICLEVEL = col_character(), IND_RPY_3YR_RT_SUPP = col_number(), 
+        LO_INC_RPY_3YR_RT_SUPP = col_number(), 
+        MALE_RPY_3YR_RT_SUPP = col_number(), 
+        MD_EARN_WNE_P10 = col_number(), MD_FAMINC = col_number(), 
+        MD_INC_RPY_3YR_RT_SUPP = col_number(), 
+        MN_EARN_WNE_P10 = col_number(), NONCOM_RPY_3YR_RT_SUPP = col_number(), 
+        NOPELL_RPY_3YR_RT_SUPP = col_number(), 
+        NOTFIRSTGEN_RPY_3YR_RT_SUPP = col_number(), 
+        NPT4_PRIV = col_number(), NPT4_PUB = col_number(), 
+        OPEID = col_character(), PCTFLOAN = col_number(), 
+        PCTPELL = col_number(), PELL_RPY_3YR_RT_SUPP = col_number(), 
+        PFTFAC = col_number(), PREDDEG = col_character(), 
+        RPY_3YR_RT_SUPP = col_number(), SAT_AVG = col_number(), 
+        TUITFTE = col_number(), TUITIONFEE_IN = col_number(), 
+        TUITIONFEE_OUT = col_number(), UNITID = col_character()))
+
+collegescorecard<- collegescorecard%>% mutate(SCH_DEG=as.factor(SCH_DEG), PREDDEG=as.factor(PREDDEG), HIGHDEG=as.factor(HIGHDEG), CONTROL=as.factor(CONTROL)) 
+```
+
+```{r}
+library(leaps)
+full <- lm(MN_EARN_WNE_P10~MD_FAMINC+SCH_DEG+ADM_RATE_ALL+C150_4+HIGHDEG+TUITFTE+TUITIONFEE_IN+SAT_AVG+GRAD_DEBT_MDN_SUPP+COSTT4_A+PFTFAC+PCTPELL+NPT4_PUB+PCTFLOAN+RPY_3YR_RT_SUPP, data=collegescorecard)
+null <- lm(MN_EARN_WNE_P10~1, data=collegescorecard)
+step(full, data=collegescorecard, scope=list(lower=null, upper=mod1),
+     scale=fullMSE, direction="backward")
+```
+
+
+
