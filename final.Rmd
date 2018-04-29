@@ -166,9 +166,7 @@ qplot(nonadata$MN_EARN_WNE_P10,
       bins=60,
       fill=I("blue"),
       ylab="Count")
-```
 
-```{r}
 favstats(nonadata$MN_EARN_WNE_P10)
 ```
 
@@ -180,10 +178,41 @@ qplot(nonadata$MD_FAMINC,
       bins=60,
       fill=I("purple"),
       ylab="Count")
-```
 
-
-```{r}
 favstats(nonadata$MD_FAMINC)
 ```
+
+```{r}
+qplot(nonadata$ADM_RATE_ALL,
+      geom="histogram",  
+      main = "Histogram for Admission Rate", 
+      xlab = "Admission Rate",  
+      bins=60,
+      fill=I("red"),
+      ylab="Count")
+
+favstats(nonadata$ADM_RATE_ALL)
+```
+
+```{r}
+qplot(nonadata$PCTFLOAN,
+      geom="histogram",  
+      main = "Histogram for Percent on Federal Loan", 
+      xlab = "Percent on Federal Loan",  
+      bins=60,
+      fill=I("orange"),
+      ylab="Count")
+
+favstats(nonadata$PCTFLOAN)
+```
+
+
+
+
+
+
+
+
+
+
 
