@@ -1,0 +1,35 @@
+---
+title: "Untitled"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+$\widehat{Earnings} = 21,970 +.09144*Median Family Income - 6,441*Admission Rate + 11,400*Completion Rate + 16.66*Average SAT + .5526*Average Cost of Attendance - 16,470*Percent On Federal Loan$
+
+
+histograms
+```{r}
+
+
+```
+
+
+testing our model:
+```{r}
+
+  
+
+
+
+```
+
+
+
+
+
+
