@@ -207,6 +207,33 @@ favstats(nonadata$PCTFLOAN)
 ```
 
 
+```{r}
+qplot(nonadata$COSTT4_A,
+      geom="histogram",  
+      main = "Histogram for Average Cost of Attendance", 
+      xlab = "Average Cost of Attendance",  
+      bins=60,
+      fill=I("green"),
+      ylab="Count")
+
+favstats(nonadata$COSTT4_A)
+```
+
+
+```{r}
+qplot(nonadata$SAT_AVG,
+      geom="histogram",  
+      main = "Histogram for Average SAT Score", 
+      xlab = "Average SAT Score",  
+      bins=60,
+      fill=I("yellow"),
+      ylab="Count")
+
+favstats(nonadata$SAT_AVG)
+```
+
+
+
 
 
 
