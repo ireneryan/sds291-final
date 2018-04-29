@@ -7,6 +7,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(readr)
+library(mosaic)
 collegescorecard <- read_csv("group-h-csv.csv", na = c("", "NA", "NULL", "PrivacySuppressed"),
     col_types = cols(ADM_RATE = col_number(), 
         ADM_RATE_ALL = col_number(), C150_4 = col_number(), 
@@ -81,6 +82,9 @@ step(null, data=nonadata, scope=list(lower=null, upper=full),
      scale=fullMSE, direction="both")
 ```
 
+
+
+
 model summary
 ```{r}
 backwardmod<-lm(formula = MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 + 
@@ -96,6 +100,8 @@ summary(stepmod)
 
 #Low R^2
 
+I don't think the $R^2$ is that low? If we can predict 55% of the variability that's pretty good!
+
 
 
 #Checking Conditions
@@ -107,10 +113,15 @@ summary(stepmod)
 plot(backwardmod)
 ```
 
+```{r}
+plot(stepmod)
+```
+
 #ANOVA
 
 ```{r}
 anova(backwardmod)
+anova(stepmod)
 ```
 
 #Nested F Test: testing subset of percent on pell and percent on a federal loan
@@ -140,6 +151,34 @@ summary(pftfacmod)
 
 #ANOVA test about the different means of the debt repayment groups? If we want to
 
+# Summary statistics
+
+```{r}
+qplot(nonadata$MN_EARN_WNE_P10,
+      geom="histogram",  
+      main = "Histogram for Mean Earnings", 
+      xlab = "Mean Earnings",  
+      bins=60,
+      fill=I("blue"),
+      ylab="Count")
+```
+
+```{r}
+favstats(nonadata$MN_EARN_WNE_P10)
+```
+
+```{r}
+qplot(nonadata$MD_FAMINC,
+      geom="histogram",  
+      main = "Histogram for Median Family Income", 
+      xlab = "Median Family Income",  
+      bins=60,
+      fill=I("purple"),
+      ylab="Count")
+```
 
 
+```{r}
+favstats(nonadata$MD_FAMINC)
+```
 
