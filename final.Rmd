@@ -122,6 +122,18 @@ plot(backwardmod)
 plot(stepmod)
 ```
 
+##VIF
+
+```{r}
+library(car)
+```
+
+```{r}
+vif(full)
+vif(stepmod)
+```
+
+
 #ANOVA
 
 ```{r}
