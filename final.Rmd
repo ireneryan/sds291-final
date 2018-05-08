@@ -86,7 +86,6 @@ step(null, data=nonadata, scope=list(lower=null, upper=full),
 
 
 
-
 model summary
 ```{r}
 backwardmod<-lm(formula = MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 + 
@@ -101,6 +100,87 @@ summary(stepmod)
 ```
 
 $\widehat{Earnings} = 21,970 +.09144*Median Family Income - 6,441*Admition Rate + 11,400*Completion Rate + 16.66*Average SAT + .5526*Average Cost of Attendance - 16,470*Percent On Federal Loan$
+
+# Stepwise with logMD_FAMINC
+
+```{r}
+full2<-lm(MN_EARN_WNE_P10~logMD_FAMINC+
+          ADM_RATE_ALL+
+             C150_4+
+             SAT_AVG
+           +GRAD_DEBT_MDN_SUPP
+           +COSTT4_A
+           +PFTFAC+
+             PCTPELL+
+             PCTFLOAN, data=nonadata)
+step(null, data=nonadata, scope=list(lower=null, upper=full2),
+     scale=fullMSE, direction="both")
+```
+
+```{r}
+stepmod2<-lm(MN_EARN_WNE_P10 ~ C150_4 + PCTFLOAN + COSTT4_A + 
+    SAT_AVG + ADM_RATE_ALL + logMD_FAMINC, data = nonadata)
+summary(stepmod2)
+```
+
+```{r}
+plot(stepmod2)
+```
+
+# Experimenting with higher order models
+
+```{r}
+hordmod1<-lm(MN_EARN_WNE_P10 ~ C150_4 + MD_FAMINC*PCTFLOAN + COSTT4_A*MD_FAMINC + C150_4*ADM_RATE_ALL + PCTFLOAN + COSTT4_A + 
+    SAT_AVG + ADM_RATE_ALL + MD_FAMINC, data = nonadata)
+summary(hordmod1)
+```
+
+# Stepwise with interaction terms
+
+```{r}
+full3<-lm(MN_EARN_WNE_P10~C150_4*ADM_RATE_ALL+ MD_FAMINC*PCTFLOAN + MD_FAMINC*COSTT4_A + GRAD_DEBT_MDN_SUPP*MD_FAMINC +PCTPELL*PCTFLOAN + PCTPELL*MD_FAMINC + MD_FAMINC+
+          ADM_RATE_ALL+
+             C150_4+
+             SAT_AVG
+           +GRAD_DEBT_MDN_SUPP
+           +COSTT4_A
+           +PFTFAC+
+             PCTPELL+
+             PCTFLOAN, data=nonadata)
+step(null, data=nonadata, scope=list(lower=null, upper=full3),
+     scale=fullMSE, direction="both")
+```
+
+```{r}
+full4<-lm(MN_EARN_WNE_P10~C150_4*ADM_RATE_ALL+ MD_FAMINC*PCTFLOAN + MD_FAMINC*COSTT4_A + GRAD_DEBT_MDN_SUPP*MD_FAMINC + ADM_RATE_ALL*MD_FAMINC + C150_4*MD_FAMINC + SAT_AVG*MD_FAMINC + SAT_AVG*ADM_RATE_ALL +PCTPELL*PCTFLOAN + PCTPELL*MD_FAMINC + MD_FAMINC+
+          ADM_RATE_ALL+
+             C150_4+
+             SAT_AVG
+           +GRAD_DEBT_MDN_SUPP
+           +COSTT4_A
+           +PFTFAC+
+             PCTPELL+
+             PCTFLOAN, data=nonadata)
+step(null, data=nonadata, scope=list(lower=null, upper=full4),
+     scale=fullMSE, direction="both")
+```
+
+```{r}
+interactmod1<-lm(MN_EARN_WNE_P10 ~ C150_4 + PCTFLOAN + COSTT4_A + 
+    MD_FAMINC + ADM_RATE_ALL + SAT_AVG + PCTPELL + C150_4:ADM_RATE_ALL + 
+    PCTFLOAN:MD_FAMINC + COSTT4_A:MD_FAMINC + PCTFLOAN:PCTPELL, 
+    data = nonadata)
+summary(interactmod1)
+```
+
+```{r}
+interactmod2<- lm(MN_EARN_WNE_P10 ~ C150_4 + PCTFLOAN + COSTT4_A + 
+    MD_FAMINC + ADM_RATE_ALL + SAT_AVG + PCTPELL + C150_4:MD_FAMINC + 
+    C150_4:ADM_RATE_ALL, data = nonadata)
+summary(interactmod2)
+```
+
+
 
 
 #Low R^2
@@ -189,6 +269,8 @@ qplot(nonadata$MN_EARN_WNE_P10,
 favstats(nonadata$MN_EARN_WNE_P10)
 ```
 
+
+
 ```{r}
 qplot(nonadata$MD_FAMINC,
       geom="histogram",  
@@ -199,6 +281,33 @@ qplot(nonadata$MD_FAMINC,
       ylab="Count")
 
 favstats(nonadata$MD_FAMINC)
+
+```
+
+```{r}
+nonadata<- nonadata%>% mutate(logMD_FAMINC=log(MD_FAMINC))
+qplot(nonadata$logMD_FAMINC,
+      geom="histogram",  
+      main = "Histogram for Log Median Family Income", 
+      xlab = "Log Median Family Income",  
+      bins=60,
+      fill=I("purple"),
+      ylab="Count")
+
+favstats(nonadata$logMD_FAMINC)
+```
+
+```{r}
+nonadata<- nonadata%>% mutate(sqrtMD_FAMINC2=sqrt(MD_FAMINC))
+qplot(nonadata$MD_FAMINC2,
+      geom="histogram",  
+      main = "Histogram for SQRT Median Family Income", 
+      xlab = "SQRT Median Family Income",  
+      bins=60,
+      fill=I("purple"),
+      ylab="Count")
+
+favstats(nonadata$sqrtMD_FAMINC)
 ```
 
 ```{r}
