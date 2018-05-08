@@ -48,7 +48,7 @@ nonadata%>%
   cor()
 ```
 
-#Backward Elimination
+#Stepwise Regression
 ```{r}
 library(leaps)
 full <- lm(MN_EARN_WNE_P10~MD_FAMINC+
@@ -65,34 +65,9 @@ null <- lm(MN_EARN_WNE_P10~1, data=nonadata)
 
 fullMSE<-(summary(full)$sigma)^2 
 
-step(full, data=nonadata,
-     scale=fullMSE, direction="backward")
-```
 
-```{r}
-step(full, data=nonadata,
-     scale=fullMSE, direction="forward")
-
-```
-
-
-
-#Stepwise: gives same model
-
-```{r}
 step(null, data=nonadata, scope=list(lower=null, upper=full),
      scale=fullMSE, direction="both")
-```
-
-
-
-
-model summary
-```{r}
-backwardmod<-lm(formula = MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 + 
-    SAT_AVG + COSTT4_A + PCTFLOAN, data = nonadata)
-
-summary(backwardmod)
 
 stepmod<-lm(formula = MN_EARN_WNE_P10 ~ C150_4 + PCTFLOAN + COSTT4_A + 
     MD_FAMINC + ADM_RATE_ALL + SAT_AVG, data = nonadata)
