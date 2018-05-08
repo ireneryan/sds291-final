@@ -183,7 +183,4 @@ qplot(nonadata$MD_FAMINC,
 ```
 
 
-```{r}
-favstats(nonadata$MD_FAMINC)
-```
 
