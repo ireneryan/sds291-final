@@ -97,6 +97,25 @@ plot(backwardmod)
 plot(stepmod)
 ```
 
+##VIF
+
+```{r}
+library(car)
+```
+
+```{r}
+vif(full)
+vif(stepmod)
+```
+
+```{r}
+modcor3<-lm(PCTPELL~MD_FAMINC, data=nonadata)
+summary(modcor3)
+modcor4<-lm(PCTPELL~PCTFLOAN, data=nonadata)
+summary(modcor4)
+```
+
+
 #ANOVA
 
 ```{r}
