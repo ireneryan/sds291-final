@@ -178,9 +178,8 @@ summary(interactmod2)
 
 I don't think the $R^2$ is that low? If we can predict 55% of the variability that's pretty good!
 
-=======
+
 $\widehat{Earnings} = 21,970 +.09144*Median Family Income - 6,441*Admission Rate + 11,400*Completion Rate + 16.66*Average SAT + .5526*Average Cost of Attendance - 16,470*Percent On Federal Loan$
->>>>>>> 95be99a86259fa0b071444fa712dfcaa6a70afd5
 
 
 #Checking Conditions
@@ -243,62 +242,12 @@ summary(pftfacmod)
 
 ```{r}
 favstats(nonadata$MN_EARN_WNE_P10)
-<<<<<<< HEAD
-```
 
-
-
-```{r}
-qplot(nonadata$MD_FAMINC,
-      geom="histogram",  
-      main = "Histogram for Median Family Income", 
-      xlab = "Median Family Income",  
-      bins=60,
-      fill=I("purple"),
-      ylab="Count")
-
-favstats(nonadata$MD_FAMINC)
-
-```
-
-```{r}
 nonadata<- nonadata%>% mutate(logMD_FAMINC=log(MD_FAMINC))
-qplot(nonadata$logMD_FAMINC,
-      geom="histogram",  
-      main = "Histogram for Log Median Family Income", 
-      xlab = "Log Median Family Income",  
-      bins=60,
-      fill=I("purple"),
-      ylab="Count")
 
 favstats(nonadata$logMD_FAMINC)
-```
-
-```{r}
-nonadata<- nonadata%>% mutate(sqrtMD_FAMINC2=sqrt(MD_FAMINC))
-qplot(nonadata$MD_FAMINC2,
-      geom="histogram",  
-      main = "Histogram for SQRT Median Family Income", 
-      xlab = "SQRT Median Family Income",  
-      bins=60,
-      fill=I("purple"),
-      ylab="Count")
-
-favstats(nonadata$sqrtMD_FAMINC)
-```
-
-```{r}
-qplot(nonadata$ADM_RATE_ALL,
-      geom="histogram",  
-      main = "Histogram for Admission Rate", 
-      xlab = "Admission Rate",  
-      bins=60,
-      fill=I("red"),
-      ylab="Count")
-=======
 
 favstats(nonadata$MD_FAMINC)
->>>>>>> 95be99a86259fa0b071444fa712dfcaa6a70afd5
 
 favstats(nonadata$ADM_RATE_ALL)
 
