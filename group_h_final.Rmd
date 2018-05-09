@@ -19,7 +19,14 @@ Higher education is regarded as a path to success, with college graduates boasti
 
 #Introduction:
 
+<<<<<<< HEAD
 College Scorecard, an online tool created by the United States Department of Education to allow students to compare institutions of higher education, asserts that college graduates earn one million dollars more in their lifetime, on average, than high school graduates (CollegeScorecard). Because of the advantages of a college degree, a large percent of high school graduates are now enrolling in college. In 2017, 66.7% of high school graduates enrolled in college ("College Enrollment and Work Activity"). Many students see college as a way of securing a higher paying job in a field of their choice, and more jobs now require their applicants to have a bachelor's degree. Within higher education, however, there remain significant disparities. A recent study by the Brookings Institution looked at whether or not college could help close gaps in income equality. It found that, although higher education improved the economic situations of poorer Americans, college did not remedy income inequality (Hershbein 2015).
+=======
+College Scorecard, an online tool created by the United States Department of Education to allow students to compare institutions of higher education, asserts that college graduates earn one million dollars more in their lifetime, on average, than high school graduates (CollegeScorecard 2018). Because of the advantages of a college degree, a large percent of high school graduates are now enrolling in college. In 2017, 66.7% of high school graduates enrolled in college (Bureau of Labor Statistics 2018). Many students see college as a way of securing a higher paying job in a field of their choice, and more jobs now require their applicants to have a bachelor's degree. Within higher education, however, there remain significant disparities. A recent study by the Brookings Institution looked at whether or not college could help close gaps in income equality. It found that, although higher education improved the economic situations of poorer Americans, college did not remedy income inequality (Hershbein 2015).
+
+College Scorecard, an online tool created by the United States Department of Education to allow students to compare institutions of higher education, asserts that college graduates earn one million dollars more in their lifetime, on average, than high school graduates (CollegeScorecard). Because of the advantages of a college degree, a large percent of high school graduates are now enrolling in college. In 2017, 66.7% of high school graduates enrolled in college ("College Enrollment and Work Activity"). Many students see college as a way of securing a higher paying job in a field of their choice, and more jobs now require their applicants to have a bachelor's degree. Within higher education, however, there remain significant disparities. A recent study by the Brookings Institution looked at whether or not college could help close gaps in income equality. It found that, although higher education improved the economic situations of poorer Americans, college did not remedy income inequality (Hershbein 2015).
+
+>>>>>>> 55261afaff4ee145f4791a6529608aa71edc577a
 We are interested in understanding why individuals from economically disadvantaged backgrounds remain less likely to earn as much as their peers with the same degree. There are a number of factors that may influence these outcomes, including the cost of college. More highly ranked colleges and universities tend to be more expensive, causing disparities in the colleges that students of different financial backgrounds attend (Kinsler et al. 2011). Higher family income also tends to be associated with increased ability to successfully complete some form of higher education (Haveman et al. 2006). After graduation, students who attended more prestigious schools typically earn higher salaries than those who attended institutions of lower perceived academic quality (Thomas et al. 2005). 
 We hope to examine whether or not there is continuity between students’ financial status before college and after graduation. Using data from College Scorecard, a nationally representative survey of institutions of higher education across the United States, we explored the relationship between factors that describe the financial status of a college’s student body (including percent receiving pell grants and federal loans, median family income, and average graduate debt) and average earnings ten years after graduation. In addition to financial factors, other factors related to school caliber were included in our models, including average SAT score, completion rate, and admission rate.
 
@@ -63,6 +70,11 @@ The explanatory variables include mean family income (dollars), total cost (tuit
 
 #Methods
 
+<<<<<<< HEAD
+=======
+We selected our model using stepwise regression based on $R^2$ and p-values. Stepwise model selection was chosen because it accounts for both maintaining a high $R^2$ and keeping explanatory variables significant. Our final model included completion rate, median family income, admission rate, average SAT score, average cost of attendance, and percent of students on federal loans, all of which were significant at the 5% level. 
+
+>>>>>>> 55261afaff4ee145f4791a6529608aa71edc577a
 We selected our model using stepwise regression based on $R^2$ and p-values. We chose stepwise model selection chose because it accounts for both maintaining a high $R^2$ and keeping explanatory variables significant. Our final model included completion rate, the natural log of median family income, admission rate, average SAT score, average cost of attendance, and percent of students on federal loans, all of which were significant at the 5% level. 
 
 ##Stepwise Regression
@@ -99,7 +111,11 @@ summary(stepmod)
 $\widehat{Earnings} = 21,970 +.09144*Median Family Income - 6,441*Admition Rate + 11,400*Completion Rate + 16.66*Average SAT + .5526*Average Cost of Attendance - 16,470*Percent On Federal Loan$
 
 
+<<<<<<< HEAD
 ##Descriptive statistics
+=======
+###Descriptive statistics
+>>>>>>> 55261afaff4ee145f4791a6529608aa71edc577a
 
 The final model contained six predictors, all of which were statistically significant, with a p-value of less than 0.05.
 
@@ -125,14 +141,31 @@ favstats(nonadata$SAT_AVG)
 
 There were several measures of tuition cost in the dataset, including average cost of attendance minus scholarships, average cost of public institutions, in and out of state tuition fees, among others, all of which were highly correlated. We chose average annual total cost of attendance, which includes tuition and fees, books and supplies, and living expenses for all full-time, first-time, degree/certificate-seeking undergraduates who receive Title IV aid. None of the other variables in the dataset were significantly correlated ($R^2>0.8$). We tested the multicollinearity of our full model using the variance inflation factor in the car package. The only variable with questionable multicollinearity was percent of students with a Pell grant, with a VIF of 5.28. However, this is only slightly over the threshold of questionable multicollinearity. While this variable didn’t make it into our final model, we recognize that this could have affected the backward selection part of our stepwise regression.
 
+<<<<<<< HEAD
+=======
+There were three potentially high leverage outliers in the data. These outliers were examined using a residuals vs. leverage plot of the final model. Because none of the points are outside of the Cook’s distance threshold (0.5), none of our outliers have high enough leverage to be considered influential.
+
+
+###L.I.N.E. Conditions
+
+
+>>>>>>> 55261afaff4ee145f4791a6529608aa71edc577a
 ```{r}
 library(car)
 vif(full)
 vif(stepmod)
 ```
 
+<<<<<<< HEAD
 There were three potentially high leverage outliers in the data. These outliers were examined using a residuals vs. leverage plot of the final model. None of the points are outside of the Cook’s distance threshold (0.5), so none of our outliers have high enough leverage to be considered influential.
+=======
+We assessed the model for linearity, equal variance, normality, and independence. The model’s linearity and equal variance conditions are met, as shown by the residuals vs. fitted plot. However, normality does not appear to be satisfied, based on the normal quantile-to-quantile plot. The Median Family Income variable was right skewed, therefore we attempted several transformations in an attempt to improve normality. A log transformation improved the normality of the variable, however we saw little improvement in the normality of the model. For this reason, we chose not to include the log transformation in our final model.  Additionally, we cannot assert that independence is met. The data are self-reported and federally required for public colleges, however, it is possible that schools within the same state may be dependent upon one another. Further, some of the schools in the dataset are geographically separate locations of the same college, therefore these cases are most likely not independent.
 
+
+### Interaction Model
+>>>>>>> 55261afaff4ee145f4791a6529608aa71edc577a
+
+There were three potentially high leverage outliers in the data. These outliers were examined using a residuals vs. leverage plot of the final model. None of the points are outside of the Cook’s distance threshold (0.5), so none of our outliers have high enough leverage to be considered influential.
 
 
 ##L.I.N.E. Conditions
@@ -179,6 +212,11 @@ The interaction model was assessed for linearity, normality, and equal variance.
 
 #Results
 
+<<<<<<< HEAD
+=======
+Based on the p-values and coefficients of our model without interaction, average completion rate, average cost of attendance, median family income, and average SAT score are positively associated with mean earnings 10 years after graduation, while percent of students on federal loans and average admission rate are negatively associated with mean earnings 10 years after graduation. These findings allow us to reject the null hypothesis. The data provide evidence that schools with a lower average student financial status (lower family income, more federal aid) are correlated with lower earnings 10 years after graduation. The data also indicate that more “prestigious” schools (i.e. schools with a lower admission rate, a higher average cost of attendance, and higher test scores) are associated with higher earnings.
+
+>>>>>>> 55261afaff4ee145f4791a6529608aa71edc577a
 Based on the p-values and coefficients of our model without interaction, average completion rate, average cost of attendance, median family income, and average SAT score are positively associated with mean earnings 10 years after graduation, while percent of students on federal loans and average admission rate are negatively associated with mean earnings 10 years after graduation, all at a statistically significant level. The negative association and significant p-values between median family income, federal aid, and post graduation earnings allows us to reject the null hypothesis. The data provide evidence that schools with a lower average student financial status (lower family income, more federal aid) are correlated with lower earnings 10 years after graduation. The data also indicate that more “prestigious” schools (i.e. schools with a lower admission rate, a higher average cost of attendance, and higher test scores) are associated with higher earnings.
 
 In the final interaction model, admission rate is no longer a significant predictor of mean earnings 10 years after graduation. However, the interaction terms between median family income and completion rate and between completion rate and admission rate are significant.
@@ -198,6 +236,23 @@ We recommend that a larger number of schools institute need-blind admissions pol
 
 Citations:
 
+<<<<<<< HEAD
+=======
+# Citations:
+
+
+“College Enrollment and Work Activity of Recent High School and College Graduates 
+Summary.” Bureau of Labor Statistics. US Department of Labor, 26 April 2018, 
+https://www.bls.gov/news.release/hsgec.nr0.htm. Accessed April 2018.
+
+“Data Documentation for College Scorecard.” Data Catalogue, 2017, 
+https://collegescorecard.ed.gov/assets/FullDataDocumentation.pdf. Accessed March
+ 2018. 
+
+Haveman, Robert, and Timothy Smeeding. “The Role of Higher Education in Social Mobility.” 
+The Future of Children, vol. 16, no. 2, 2006, pp. 125–150. JSTOR. Accessed March 2018. 
+
+>>>>>>> 55261afaff4ee145f4791a6529608aa71edc577a
 “College Scorecard.” Data Catalogue, 2017,https://catalog.data.gov/dataset/college-scorecard. 
 Accessed March 2018. 
 
@@ -213,6 +268,7 @@ Haveman, Robert, and Timothy Smeeding. “The Role of Higher Education in Social
 The Future of Children, vol. 16, no. 2, 2006, pp. 125–150. JSTOR, JSTOR, 
 www.jstor.org/stable/3844794. Accessed March 2018. 
 
+<<<<<<< HEAD
 Hershbein, Brad, Kearney, Melissa S., and Summers, Lawrence H. “Increasing Education: What 
 it Will and Will Not do for Earnings and Earnings Inequality.” Kami.hq.com. The Hamilton Project, 30 March 2015, https://web.kamihq.com/web/viewer.html?source=extension_pdfhandler&file=http%3A%2F%2Fwww.hamiltonproject.org%2Fassets%2Flegacy%2Ffiles%2Fdownloads_and_links%2Fimpact_of_edu_earnings_inequality_hershbein_kearney_summers.pdf. Accessed 8 May 2018.
 
@@ -225,14 +281,28 @@ Education, vol. 46, no. 4, 2005, pp. 437–459. JSTOR, JSTOR, www.jstor.org/stab
 
 White, Gillian B. “What Education Can and Can't Do for Economic Inequality.” The Atlantic, 7 
 April 2015, https://www.theatlantic.com/business/archive/2015/04/what-education-can-and-cant-do-for-economic-inequality/389754/. Accessed 8 May 2018.
+=======
+>>>>>>> 55261afaff4ee145f4791a6529608aa71edc577a
 
 
 #Multicollinearity: we will use COSTT4_A (average annual cost of tuition)
 
+<<<<<<< HEAD
 ```{r}
 nonadata%>%
   select(COSTT4_A, NPT4_PUB)%>%
   cor()
+=======
+Thomas, Scott L., and Liang Zhang. “Post-Baccalaureate Wage Growth within 4 Years of 
+Graduation: The Effects of College Quality and College Major.” Research in Higher 
+Education, vol. 46, no. 4, 2005, pp. 437–459. JSTOR. Accessed March 2018. 
+
+U.S. Dept of Education. “College Scorecard.” Data Catalogue, 2017,https://catalog.data.gov/dataset/college-scorecard. 
+Accessed March 2018. 
+
+White, Gillian B. “What Education Can and Can't Do for Economic Inequality.” The Atlantic, 7 
+April 2015, https://www.theatlantic.com/business/archive/2015/04/what-education-can-and-cant-do-for-economic-inequality/389754/. Accessed May 2018.
+>>>>>>> 55261afaff4ee145f4791a6529608aa71edc577a
 
 nonadata%>%
   select(PCTPELL, PCTFLOAN)%>%
@@ -240,7 +310,12 @@ nonadata%>%
 ```
 
 
+<<<<<<< HEAD
 # Stepwise with logMD_FAMINC
+=======
+#### Stepwise with logMD_FAMINC
+
+>>>>>>> 55261afaff4ee145f4791a6529608aa71edc577a
 
 ```{r}
 
@@ -270,12 +345,35 @@ summary(stepmod2)
 plot(stepmod2)
 ```
 
+<<<<<<< HEAD
 # Experimenting with higher order models
 
 ```{r}
 hordmod1<-lm(MN_EARN_WNE_P10 ~ C150_4 + MD_FAMINC*PCTFLOAN + COSTT4_A*MD_FAMINC + C150_4*ADM_RATE_ALL + PCTFLOAN + COSTT4_A + 
     SAT_AVG + ADM_RATE_ALL + MD_FAMINC, data = nonadata)
 summary(hordmod1)
+=======
+
+####VIF
+
+```{r}
+library(car)
+vif(full)
+vif(stepmod)
+```
+
+
+####Nested F Test: testing subset of percent on pell and percent on a federal loan
+
+```{r}
+modelf<-lm(MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 + 
+    SAT_AVG + COSTT4_A + PCTFLOAN + PCTPELL, data = nonadata)
+  
+modelr<-lm(MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 + 
+    SAT_AVG + COSTT4_A, data = nonadata)
+
+anova(modelr, modelf)
+>>>>>>> 55261afaff4ee145f4791a6529608aa71edc577a
 ```
 
 # Stepwise with interaction terms
@@ -306,4 +404,8 @@ full4<-lm(MN_EARN_WNE_P10~C150_4*ADM_RATE_ALL+ MD_FAMINC*PCTFLOAN + MD_FAMINC*CO
              PCTFLOAN, data=nonadata)
 step(null, data=nonadata, scope=list(lower=null, upper=full4),
      scale=fullMSE, direction="both")
+<<<<<<< HEAD
+=======
+
+>>>>>>> 55261afaff4ee145f4791a6529608aa71edc577a
 ```
