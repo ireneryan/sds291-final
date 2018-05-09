@@ -37,6 +37,7 @@ collegescorecard<- collegescorecard%>%
   mutate( CONTROL=as.factor(CONTROL), ICLEVEL = as.factor(ICLEVEL)) 
 
 nonadata <- na.omit(collegescorecard[c("MN_EARN_WNE_P10","MD_FAMINC","ADM_RATE_ALL","C150_4","SAT_AVG","GRAD_DEBT_MDN_SUPP","COSTT4_A","PFTFAC","PCTPELL","NPT4_PUB","PCTFLOAN", "CONTROL")])
+
 ```
 
 
@@ -46,9 +47,13 @@ nonadata <- na.omit(collegescorecard[c("MN_EARN_WNE_P10","MD_FAMINC","ADM_RATE_A
 nonadata%>%
   select(COSTT4_A, NPT4_PUB)%>%
   cor()
+
+nonadata%>%
+  select(PCTPELL, PCTFLOAN)%>%
+  cor()
 ```
 
-#Backward Elimination
+#Stepwise Regression
 ```{r}
 library(leaps)
 full <- lm(MN_EARN_WNE_P10~MD_FAMINC+
@@ -65,48 +70,20 @@ null <- lm(MN_EARN_WNE_P10~1, data=nonadata)
 
 fullMSE<-(summary(full)$sigma)^2 
 
-step(full, data=nonadata,
-     scale=fullMSE, direction="backward")
-```
 
-```{r}
-step(full, data=nonadata,
-     scale=fullMSE, direction="forward")
-
-```
-
-
-
-#Stepwise: gives same model
-
-```{r}
 step(null, data=nonadata, scope=list(lower=null, upper=full),
      scale=fullMSE, direction="both")
 ```
 
-
-
-
-model summary
+#Final Model
 ```{r}
-backwardmod<-lm(formula = MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 + 
-    SAT_AVG + COSTT4_A + PCTFLOAN, data = nonadata)
-
-summary(backwardmod)
-
 stepmod<-lm(formula = MN_EARN_WNE_P10 ~ C150_4 + PCTFLOAN + COSTT4_A + 
     MD_FAMINC + ADM_RATE_ALL + SAT_AVG, data = nonadata)
 
 summary(stepmod)
 ```
 
-$\widehat{Earnings} = 21,970 +.09144*Median Family Income - 6,441*Admition Rate + 11,400*Completion Rate + 16.66*Average SAT + .5526*Average Cost of Attendance - 16,470*Percent On Federal Loan$
-
-
-#Low R^2
-
-I don't think the $R^2$ is that low? If we can predict 55% of the variability that's pretty good!
-
+$\widehat{Earnings} = 21,970 +.09144*Median Family Income - 6,441*Admission Rate + 11,400*Completion Rate + 16.66*Average SAT + .5526*Average Cost of Attendance - 16,470*Percent On Federal Loan$
 
 
 #Checking Conditions
@@ -115,17 +92,29 @@ I don't think the $R^2$ is that low? If we can predict 55% of the variability th
 ##Assuming independence because it's self reported, but schools near each other may have effects?
 
 ```{r}
-plot(backwardmod)
+plot(stepmod)
+```
+
+##VIF
+
+```{r}
+library(car)
+
+vif(full)
+vif(stepmod)
 ```
 
 ```{r}
-plot(stepmod)
+modcor3<-lm(PCTPELL~MD_FAMINC, data=nonadata)
+summary(modcor3)
+modcor4<-lm(PCTPELL~PCTFLOAN, data=nonadata)
+summary(modcor4)
 ```
+
 
 #ANOVA
 
 ```{r}
-anova(backwardmod)
 anova(stepmod)
 ```
 
@@ -149,9 +138,6 @@ pftfacmod<-lm(MN_EARN_WNE_P10~PFTFAC, data=nonadata)
 summary(pftfacmod)
 ```
 
-
-
-
 #Test its effectiveness of the model for some schools in our towns?
 
 #ANOVA test about the different means of the debt repayment groups? If we want to
@@ -159,28 +145,30 @@ summary(pftfacmod)
 # Summary statistics
 
 ```{r}
-qplot(nonadata$MN_EARN_WNE_P10,
-      geom="histogram",  
-      main = "Histogram for Mean Earnings", 
-      xlab = "Mean Earnings",  
-      bins=60,
-      fill=I("blue"),
-      ylab="Count")
-```
-
-```{r}
 favstats(nonadata$MN_EARN_WNE_P10)
+
+favstats(nonadata$MD_FAMINC)
+
+favstats(nonadata$ADM_RATE_ALL)
+
+favstats(nonadata$PCTFLOAN)
+
+favstats(nonadata$COSTT4_A)
+
+favstats(nonadata$SAT_AVG)
 ```
 
-```{r}
-qplot(nonadata$MD_FAMINC,
-      geom="histogram",  
-      main = "Histogram for Median Family Income", 
-      xlab = "Median Family Income",  
-      bins=60,
-      fill=I("purple"),
-      ylab="Count")
-```
+
+ 
+
+
+
+
+
+
+
+
+
 
 
 
