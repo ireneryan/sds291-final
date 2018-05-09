@@ -232,9 +232,6 @@ nonadata%>%
 ```
 
 
-
-
-
 # Stepwise with logMD_FAMINC
 
 ```{r}
