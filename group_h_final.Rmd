@@ -195,39 +195,6 @@ These findings have several implications for equity in higher education. Because
 We recommend that a larger number of schools institute need-blind admissions policies and that a greater amount of funding be allocated to financial aid programs to allow students from all financial backgrounds to access high-caliber schools. Additionally, programs meant to support low-income students through the admission process and during their time in college, including free career counseling, interview attire borrowing programs, increased wages for work-study jobs, stipends for unpaid internships, and financial assistance for graduate school applications, may have a positive impact on the financial outcomes of low-income students. By helping low-income students successfully complete college, we may be able to reduce the effects of income inequality on future generations.
 
 
-# Citations:
-
-
-“College Enrollment and Work Activity of Recent High School and College Graduates 
-Summary.” Bureau of Labor Statistics. US Department of Labor, 26 April 2018, 
-https://www.bls.gov/news.release/hsgec.nr0.htm. Accessed 8 May 2018.
-
-“Data Documentation for College Scorecard.” Data Catalogue, 2017, 
-https://collegescorecard.ed.gov/assets/FullDataDocumentation.pdf. Accessed March
- 2018. 
-
-Haveman, Robert, and Timothy Smeeding. “The Role of Higher Education in Social Mobility.” 
-The Future of Children, vol. 16, no. 2, 2006, pp. 125–150. JSTOR, JSTOR, 
-www.jstor.org/stable/3844794. Accessed March 2018. 
-
-
-Hershbein, Brad, Kearney, Melissa S., and Summers, Lawrence H. “Increasing Education: What 
-it Will and Will Not do for Earnings and Earnings Inequality.” The Hamilton Project, 30 March 2015,  Accessed April 2018.
-
-Kinsler, Josh, and Ronni Pavan. “Family Income and Higher Education Choices: The 
-Importance of Accounting for College Quality.” Journal of Human Capital, vol. 5, no. 4, 2011, pp. 453–477. JSTOR. Accessed March 2018. 
-
-Thomas, Scott L., and Liang Zhang. “Post-Baccalaureate Wage Growth within 4 Years of 
-Graduation: The Effects of College Quality and College Major.” Research in Higher 
-Education, vol. 46, no. 4, 2005, pp. 437–459. JSTOR. Accessed March 2018. 
-
-U.S. Dept of Education. “College Scorecard.” Data Catalogue, 2017,https://catalog.data.gov/dataset/college-scorecard. 
-Accessed March 2018. 
-
-White, Gillian B. “What Education Can and Can't Do for Economic Inequality.” The Atlantic, 7 
-April 2015, https://www.theatlantic.com/business/archive/2015/04/what-education-can-and-cant-do-for-economic-inequality/389754/. Accessed May 2018.
-
-
 ## Appendix:
 
 #### Stepwise with logMD_FAMINC
@@ -264,7 +231,7 @@ plot(stepmod2)
 
 ####VIF
 
-```{r}
+```{r, message=FALSE}
 library(car)
 vif(full)
 vif(stepmod)
@@ -282,3 +249,38 @@ modelr<-lm(MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 +
 
 anova(modelr, modelf)
 ```
+
+Based on the F statistic and p-value of this nested F test, at least one of Percent Students receiving Pell grants or Percent Students receiving federal loans is a useful predictor for mean earnings 10 years post-graduation.
+
+
+
+# Citations:
+
+“College Enrollment and Work Activity of Recent High School and College Graduates 
+Summary.” Bureau of Labor Statistics. US Department of Labor, 26 April 2018, 
+https://www.bls.gov/news.release/hsgec.nr0.htm. Accessed 8 May 2018.
+
+“Data Documentation for College Scorecard.” Data Catalogue, 2017, 
+https://collegescorecard.ed.gov/assets/FullDataDocumentation.pdf. Accessed March
+ 2018. 
+
+Haveman, Robert, and Timothy Smeeding. “The Role of Higher Education in Social Mobility.” 
+The Future of Children, vol. 16, no. 2, 2006, pp. 125–150. JSTOR, JSTOR, 
+www.jstor.org/stable/3844794. Accessed March 2018. 
+
+
+Hershbein, Brad, Kearney, Melissa S., and Summers, Lawrence H. “Increasing Education: What 
+it Will and Will Not do for Earnings and Earnings Inequality.” The Hamilton Project, 30 March 2015,  Accessed April 2018.
+
+Kinsler, Josh, and Ronni Pavan. “Family Income and Higher Education Choices: The 
+Importance of Accounting for College Quality.” Journal of Human Capital, vol. 5, no. 4, 2011, pp. 453–477. JSTOR. Accessed March 2018. 
+
+Thomas, Scott L., and Liang Zhang. “Post-Baccalaureate Wage Growth within 4 Years of 
+Graduation: The Effects of College Quality and College Major.” Research in Higher 
+Education, vol. 46, no. 4, 2005, pp. 437–459. JSTOR. Accessed March 2018. 
+
+U.S. Dept of Education. “College Scorecard.” Data Catalogue, 2017,https://catalog.data.gov/dataset/college-scorecard. 
+Accessed March 2018. 
+
+White, Gillian B. “What Education Can and Can't Do for Economic Inequality.” The Atlantic, 7 
+April 2015, https://www.theatlantic.com/business/archive/2015/04/what-education-can-and-cant-do-for-economic-inequality/389754/. Accessed May 2018.
