@@ -21,9 +21,8 @@ Higher education is regarded as a path to success, with college graduates boasti
 
 College Scorecard, an online tool created by the United States Department of Education to allow students to compare institutions of higher education, asserts that college graduates earn one million dollars more in their lifetime, on average, than high school graduates (CollegeScorecard 2018). Because of the advantages of a college degree, a large percent of high school graduates are now enrolling in college. In 2017, 66.7% of high school graduates enrolled in college (Bureau of Labor Statistics 2018). Many students see college as a way of securing a higher paying job in a field of their choice, and more jobs now require their applicants to have a bachelor's degree. Within higher education, however, there remain significant disparities. A recent study by the Brookings Institution looked at whether or not college could help close gaps in income equality. It found that, although higher education improved the economic situations of poorer Americans, college did not remedy income inequality (Hershbein 2015).
 
-College Scorecard, an online tool created by the United States Department of Education to allow students to compare institutions of higher education, asserts that college graduates earn one million dollars more in their lifetime, on average, than high school graduates (CollegeScorecard). Because of the advantages of a college degree, a large percent of high school graduates are now enrolling in college. In 2017, 66.7% of high school graduates enrolled in college ("College Enrollment and Work Activity"). Many students see college as a way of securing a higher paying job in a field of their choice, and more jobs now require their applicants to have a bachelor's degree. Within higher education, however, there remain significant disparities. A recent study by the Brookings Institution looked at whether or not college could help close gaps in income equality. It found that, although higher education improved the economic situations of poorer Americans, college did not remedy income inequality (Hershbein 2015).
-
 We are interested in understanding why individuals from economically disadvantaged backgrounds remain less likely to earn as much as their peers with the same degree. There are a number of factors that may influence these outcomes, including the cost of college. More highly ranked colleges and universities tend to be more expensive, causing disparities in the colleges that students of different financial backgrounds attend (Kinsler et al. 2011). Higher family income also tends to be associated with increased ability to successfully complete some form of higher education (Haveman et al. 2006). After graduation, students who attended more prestigious schools typically earn higher salaries than those who attended institutions of lower perceived academic quality (Thomas et al. 2005). 
+
 In this study, we examine whether or not there is continuity between students’ financial status before college and after graduation. Using data from College Scorecard, a nationally representative survey of institutions of higher education across the United States, we explored the relationship between factors that describe the financial status of a college’s student body (including percent receiving pell grants and federal loans, median family income, and average graduate debt) and average earnings ten years after graduation. In addition to financial factors, other factors related to school caliber were included in our models, including average SAT score, completion rate, and admission rate.
 
 #Data
@@ -68,7 +67,6 @@ The explanatory variables include mean family income (dollars), total cost (tuit
 
 We selected our model using stepwise regression based on $R^2$ and p-values. Stepwise model selection was chosen because it accounts for both maintaining a high $R^2$ and keeping explanatory variables significant. Our final model included completion rate, median family income, admission rate, average SAT score, average cost of attendance, and percent of students on federal loans, all of which were significant at the 5% level. 
 
-We selected our model using stepwise regression based on $R^2$ and p-values. We chose stepwise model selection chose because it accounts for both maintaining a high $R^2$ and keeping explanatory variables significant. Our final model included completion rate, the natural log of median family income, admission rate, average SAT score, average cost of attendance, and percent of students on federal loans, all of which were significant at the 5% level. 
 
 ###Stepwise Regression
 ```{r}
@@ -133,30 +131,13 @@ There were several measures of tuition cost in the dataset, including average co
 There were three potentially high leverage outliers in the data. These outliers were examined using a residuals vs. leverage plot of the final model. Because none of the points are outside of the Cook’s distance threshold (0.5), none of our outliers have high enough leverage to be considered influential.
 
 
-###L.I.N.E. Conditions
-
-
-```{r}
-library(car)
-vif(full)
-vif(stepmod)
-```
-
-We assessed the model for linearity, equal variance, normality, and independence. The model’s linearity and equal variance conditions are met, as shown by the residuals vs. fitted plot. However, normality does not appear to be satisfied, based on the normal quantile-to-quantile plot. The Median Family Income variable was right skewed, therefore we attempted several transformations in an attempt to improve normality. A log transformation improved the normality of the variable, however we saw little improvement in the normality of the model. For this reason, we chose not to include the log transformation in our final model.  Additionally, we cannot assert that independence is met. The data are self-reported and federally required for public colleges, however, it is possible that schools within the same state may be dependent upon one another. Further, some of the schools in the dataset are geographically separate locations of the same college, therefore these cases are most likely not independent.
-
-
-### Interaction Model
-
-There were three potentially high leverage outliers in the data. These outliers were examined using a residuals vs. leverage plot of the final model. None of the points are outside of the Cook’s distance threshold (0.5), so none of our outliers have high enough leverage to be considered influential.
-
-
 ##L.I.N.E. Conditions
 
 ```{r}
 plot(stepmod)
 ```
 
-We assessed the model for linearity, equal variance, normality, and independence. The model’s linearity and equal variance conditions are met, as shown by the residuals vs. fitted plot. However, normality does not appear to be satisfied, based on the normal quantile-to-quantile plot. The Median Family Income variable was right skewed, therefore we attempted several transformations in an attempt to improve normality. A log transformation improved the normality of the variable; however, we saw little improvement in the normality of the model.  Additionally, we cannot assert that independence is met. The data is self-reported and federally required for public colleges, but it is possible that schools within the same state may be dependent upon one another. Further, some of the schools in the dataset are geographically separate locations of the same college, therefore these cases are most likely not independent.
+We assessed the model for linearity, equal variance, normality, and independence. The model’s linearity and equal variance conditions are met, as shown by the residuals vs. fitted plot. However, normality does not appear to be satisfied, based on the normal quantile-to-quantile plot. The Median Family Income variable was right skewed, therefore we attempted several transformations in an attempt to improve normality. A log transformation improved the normality of the variable; however, we saw little improvement in the normality of the model.  Additionally, we cannot assert that independence is met. The data is self-reported and federally required for public colleges, but it is possible that schools within the same state may be dependent upon one another. Further, some of the schools in the dataset are geographically separate locations of the same flagship college, therefore these cases are most likely not independent.
 
 
 ## Interaction Model
@@ -198,8 +179,6 @@ The interaction model was assessed for linearity, normality, and equal variance.
 
 Based on the p-values and coefficients of our model without interaction, average completion rate, average cost of attendance, median family income, and average SAT score are positively associated with mean earnings 10 years after graduation, while percent of students on federal loans and average admission rate are negatively associated with mean earnings 10 years after graduation. These findings allow us to reject the null hypothesis. The data provide evidence that schools with a lower average student financial status (lower family income, more federal aid) are correlated with lower earnings 10 years after graduation. The data also indicate that more “prestigious” schools (i.e. schools with a lower admission rate, a higher average cost of attendance, and higher test scores) are associated with higher earnings.
 
-Based on the p-values and coefficients of our model without interaction, average completion rate, average cost of attendance, median family income, and average SAT score are positively associated with mean earnings 10 years after graduation, while percent of students on federal loans and average admission rate are negatively associated with mean earnings 10 years after graduation, all at a statistically significant level. The negative association and significant p-values between median family income, federal aid, and post graduation earnings allows us to reject the null hypothesis. The data provide evidence that schools with a lower average student financial status (lower family income, more federal aid) are correlated with lower earnings 10 years after graduation. The data also indicate that more “prestigious” schools (i.e. schools with a lower admission rate, a higher average cost of attendance, and higher test scores) are associated with higher earnings.
-
 In the final interaction model, admission rate is no longer a significant predictor of mean earnings 10 years after graduation. However, the interaction terms between median family income and completion rate and between completion rate and admission rate are significant.
 The significant interactions between median family income and completion rate indicate that the relationship between completion rate and mean earnings is moderated by family income. The relationship between completion rate and mean earnings is also moderated by admission rate. These findings shed light onto the ways that family income may affect mean earnings 10 years post graduation.
 
@@ -218,9 +197,6 @@ We recommend that a larger number of schools institute need-blind admissions pol
 
 # Citations:
 
-
-“College Scorecard.” Data Catalogue, 2017,https://catalog.data.gov/dataset/college-scorecard. 
-Accessed March 2018. 
 
 “College Enrollment and Work Activity of Recent High School and College Graduates 
 Summary.” Bureau of Labor Statistics. US Department of Labor, 26 April 2018, 
@@ -305,35 +281,4 @@ modelr<-lm(MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 +
     SAT_AVG + COSTT4_A, data = nonadata)
 
 anova(modelr, modelf)
-```
-
-# Stepwise with interaction terms
-
-```{r}
-full3<-lm(MN_EARN_WNE_P10~C150_4*ADM_RATE_ALL+ MD_FAMINC*PCTFLOAN + MD_FAMINC*COSTT4_A + GRAD_DEBT_MDN_SUPP*MD_FAMINC +PCTPELL*PCTFLOAN + PCTPELL*MD_FAMINC + MD_FAMINC+
-          ADM_RATE_ALL+
-             C150_4+
-             SAT_AVG
-           +GRAD_DEBT_MDN_SUPP
-           +COSTT4_A
-           +PFTFAC+
-             PCTPELL+
-             PCTFLOAN, data=nonadata)
-step(null, data=nonadata, scope=list(lower=null, upper=full3),
-     scale=fullMSE, direction="both")
-```
-
-```{r}
-full4<-lm(MN_EARN_WNE_P10~C150_4*ADM_RATE_ALL+ MD_FAMINC*PCTFLOAN + MD_FAMINC*COSTT4_A + GRAD_DEBT_MDN_SUPP*MD_FAMINC + ADM_RATE_ALL*MD_FAMINC + C150_4*MD_FAMINC + SAT_AVG*MD_FAMINC + SAT_AVG*ADM_RATE_ALL +PCTPELL*PCTFLOAN + PCTPELL*MD_FAMINC + MD_FAMINC+
-          ADM_RATE_ALL+
-             C150_4+
-             SAT_AVG
-           +GRAD_DEBT_MDN_SUPP
-           +COSTT4_A
-           +PFTFAC+
-             PCTPELL+
-             PCTFLOAN, data=nonadata)
-step(null, data=nonadata, scope=list(lower=null, upper=full4),
-     scale=fullMSE, direction="both")
-
 ```
