@@ -1,7 +1,8 @@
 ---
 title: "Average Student Financial Status As A Predictor of Post-Graduation Earnings"
-author: Jessie Hinners, Natalie LaBossier, and Irene Ryan
-output: 
+author: "Jessie Hinners, Natalie LaBossier, and Irene Ryan"
+output:
+  pdf_document: default
   html_document:
     code_folding: hide
 ---
