@@ -1,0 +1,317 @@
+---
+title: "Average Student Financial Status As A Predictor of Post-Graduation Earnings"
+author: Jessie Hinners, Natalie LaBossier, and Irene Ryan
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readr)
+library(mosaic)
+```
+
+#Abstract:
+
+Higher education is regarded as a path to success, with college graduates boasting higher earnings than individuals with only high school diplomas. Despite the positive impact of higher education, significant disparities remain between individuals with different financial backgrounds. This study aims to explore the relationship between the average financial status of the student body and the average earnings ten years after graduation. Through stepwise multiple regression models, we demonstrate that higher median family income, total cost, average SAT scores, completion rates, and admission rates and lower percent of students receiving federal loans are associated with higher earnings post-graduation. This suggests that student financial background and school caliber may have a significant impact on students’ financial statuses later in life. Efforts to support low-income students throughout college as well as need-blind admissions policies and programs focused on improving financial aid may help reduce the impact of student financial status on post-graduation earnings.
+
+#Introduction:
+
+College Scorecard, an online tool created by the United States Department of Education to allow students to compare institutions of higher education, asserts that college graduates earn one million dollars more in their lifetime, on average, than high school graduates (CollegeScorecard). Because of the advantages of a college degree, a large percent of high school graduates are now enrolling in college. In 2017, 66.7% of high school graduates enrolled in college (Bureau of Labor Statistics, 2018). Many students see college as a way of securing a higher paying job in a field of their choice, and more jobs now require their applicants to have a bachelor's degree. Within higher education, however, there remain significant disparities. A recent study by the Brookings Institution looked at whether or not college could help close gaps in income equality. It found that, although higher education improved the economic situations of poorer Americans, college did not remedy income inequality (Hershbein 2015).
+We are interested in understanding why individuals from economically disadvantaged backgrounds remain less likely to earn as much as their peers with the same degree. There are a number of factors that may influence these outcomes, including the cost of college. More highly ranked colleges and universities tend to be more expensive, causing disparities in the colleges that students of different financial backgrounds attend (Kinsler et al. 2011). Higher family income also tends to be associated with increased ability to successfully complete some form of higher education (Haveman et al. 2006). After graduation, students who attended more prestigious schools typically earn higher salaries than those who attended institutions of lower perceived academic quality (Thomas et al. 2005). 
+We hope to examine whether or not there is continuity between students’ financial status before college and after graduation. Using data from College Scorecard, a nationally representative survey of institutions of higher education across the United States, we explored the relationship between factors that describe the financial status of a college’s student body (including percent receiving pell grants and federal loans, median family income, and average graduate debt) and average earnings ten years after graduation. In addition to financial factors, other factors related to school caliber were included in our models, including average SAT score, completion rate, and admission rate.
+
+#Data
+
+```{r}
+collegescorecard <- read_csv("group-h-csv.csv", na = c("", "NA", "NULL", "PrivacySuppressed"),
+    col_types = cols(ADM_RATE = col_number(), 
+        ADM_RATE_ALL = col_number(), C150_4 = col_number(), 
+        CONTROL = col_character(), COSTT4_A = col_number(), 
+        FAMINC = col_number(),
+        GRAD_DEBT_MDN10YR_SUPP = col_number(), 
+        GRAD_DEBT_MDN_SUPP = col_number(), 
+        ICLEVEL = col_character(), 
+        MD_EARN_WNE_P10 = col_number(), MD_FAMINC = col_number(), 
+        MN_EARN_WNE_P10 = col_number(),  
+        NPT4_PRIV = col_number(), NPT4_PUB = col_number(), 
+        OPEID = col_character(), PCTFLOAN = col_number(), 
+        PCTPELL = col_number(),  
+        PFTFAC = col_number(), PREDDEG = col_character(), 
+        RPY_3YR_RT_SUPP = col_number(), SAT_AVG = col_number(), 
+        UNITID = col_character()))
+```
+
+```{r}
+collegescorecard<- collegescorecard%>% 
+  select(ADM_RATE, ADM_RATE_ALL, C150_4, CONTROL, COSTT4_A, FAMINC, GRAD_DEBT_MDN10YR_SUPP, GRAD_DEBT_MDN_SUPP, ICLEVEL, MD_EARN_WNE_P10, MD_FAMINC, MN_EARN_WNE_P10, NPT4_PRIV, NPT4_PUB, OPEID, PCTFLOAN, PCTPELL, PFTFAC, SAT_AVG, UNITID) %>%
+  mutate( CONTROL=as.factor(CONTROL), ICLEVEL = as.factor(ICLEVEL)) 
+
+#Removed the NA values in order to do predictor selection
+nonadata <- na.omit(collegescorecard[c("MN_EARN_WNE_P10","MD_FAMINC","ADM_RATE_ALL","C150_4","SAT_AVG","GRAD_DEBT_MDN_SUPP","COSTT4_A","PFTFAC","PCTPELL","NPT4_PUB","PCTFLOAN", "CONTROL")])
+
+```
+
+The data for this study come from the U.S. Department of Education. This study uses the College Scorecard Data for the 2011-2012 school year. According to the data documentation, "these data are provided through federal reporting from institutions, data on federal financial aid, and tax information” (College Scorecard). The data includes information on 6825 public, private, and trade schools. Each observational unit is an individual school. In order to generate models, schools lacking values for any of the variables included in the models were excluded from the study, resulting in a final sample of 494 four-year public post-secondary institutions. Public schools were likely the only cases including complete data because these institutions are legally compelled to make the information publicly available. Because private schools and trade schools were excluded from the data, these findings may not be generalizable to all post-secondary institutions, but the large sample size does indicate generalizability to public colleges and possible predictive power.
+
+##Variables:
+
+The response variable in this study is mean earnings ten years after graduation, in dollars.
+The explanatory variables include mean family income (dollars), total cost (tuition minus scholarships and grants), percent of student receiving Pell grants, percent of students receiving federal financial loans, cumulative mean debt (dollars), average SAT score, admission rate, completion rate, and proportion of faculty that are employed full time.
+
+#Methods
+
+We selected our model using stepwise regression based on $R^2$ and p-values. Stepwise model selection was chosen because it accounts for both maintaining a high $R^2$ and keeping explanatory variables significant. Our final model included completion rate, the natural log of median family income, admission rate, average SAT score, average cost of attendance, and percent of students on federal loans, all of which were significant at the 5% level. 
+
+##Stepwise Regression
+```{r}
+library(leaps)
+full <- lm(MN_EARN_WNE_P10~MD_FAMINC+
+          ADM_RATE_ALL+
+             C150_4+
+             SAT_AVG
+           +GRAD_DEBT_MDN_SUPP
+           +COSTT4_A
+           +PFTFAC+
+             PCTPELL+
+             PCTFLOAN, data=nonadata)
+
+null <- lm(MN_EARN_WNE_P10~1, data=nonadata)
+
+fullMSE<-(summary(full)$sigma)^2 
+
+
+step(null, data=nonadata, scope=list(lower=null, upper=full),
+     scale=fullMSE, direction="both")
+```
+
+##Final Model
+
+```{r}
+stepmod<-lm(formula = MN_EARN_WNE_P10 ~ C150_4 + PCTFLOAN + COSTT4_A + 
+    MD_FAMINC + ADM_RATE_ALL + SAT_AVG, data = nonadata)
+
+summary(stepmod)
+```
+
+$\widehat{Earnings} = 21,970 +.09144*Median Family Income - 6,441*Admition Rate + 11,400*Completion Rate + 16.66*Average SAT + .5526*Average Cost of Attendance - 16,470*Percent On Federal Loan$
+
+
+##Descriptive statistics
+```{r}
+favstats(nonadata$MN_EARN_WNE_P10)
+
+nonadata<- nonadata%>% mutate(logMD_FAMINC=log(MD_FAMINC))
+
+favstats(nonadata$logMD_FAMINC)
+
+favstats(nonadata$MD_FAMINC)
+
+favstats(nonadata$ADM_RATE_ALL)
+
+favstats(nonadata$PCTFLOAN)
+
+favstats(nonadata$COSTT4_A)
+
+favstats(nonadata$SAT_AVG)
+```
+
+##Correlation, Multicollinearity and Outliers
+
+There were several measures of tuition cost in the dataset, including average cost of attendance minus scholarships, average cost of public institutions, in and out of state tuition fees, among others, all of which were highly correlated. We chose average annual total cost of attendance, which includes tuition and fees, books and supplies, and living expenses for all full-time, first-time, degree/certificate-seeking undergraduates who receive Title IV aid. None of the other variables in the dataset were significantly correlated ($R^2>0.8$). We tested the multicollinearity of our full model using the variance inflation factor in the car package. The only variable with questionable multicollinearity was percent of students with a Pell grant, with a VIF of 5.28. However, this is only slightly over the threshold of questionable multicollinearity. While this variable didn’t make it into our final model, we recognize that this could have affected the backward selection part of our stepwise regression.
+
+There were three potentially high leverage outliers in the data. These outliers were examined using a residuals vs. leverage plot of the final model. Because none of the points are outside of the Cook’s distance threshold (0.5), none of our outliers have high enough leverage to be considered influential.
+
+```{r}
+plot(stepmod)
+```
+
+
+
+##L.I.N.E. Conditions
+
+We assessed the model for linearity, equal variance, normality, and independence. The model’s linearity and equal variance conditions are met, as shown by the residuals vs. fitted plot. However, normality does not appear to be satisfied, based on the normal quantile-to-quantile plot. The Median Family Income variable was right skewed, therefore we attempted several transformations in an attempt to improve normality. A log transformation improved the normality of the variable, however we saw little improvement in the normality of the model.  Additionally, we cannot assert that independence is met. The data is self-reported and federally required for public colleges, however, it is possible that schools within the same state may be dependent upon one another. Further, some of the schools in the dataset are geographically separate locations of the same college, therefore these cases are most likely not independent.
+
+
+## Interaction Model
+
+
+```{r}
+full4<-lm(MN_EARN_WNE_P10~C150_4*ADM_RATE_ALL+ MD_FAMINC*PCTFLOAN + MD_FAMINC*COSTT4_A + GRAD_DEBT_MDN_SUPP*MD_FAMINC + ADM_RATE_ALL*MD_FAMINC + C150_4*MD_FAMINC + SAT_AVG*MD_FAMINC + SAT_AVG*ADM_RATE_ALL +PCTPELL*PCTFLOAN + PCTPELL*MD_FAMINC + MD_FAMINC+
+          ADM_RATE_ALL+
+             C150_4+
+             SAT_AVG
+           +GRAD_DEBT_MDN_SUPP
+           +COSTT4_A
+           +PFTFAC+
+             PCTPELL+
+             PCTFLOAN, data=nonadata)
+step(null, data=nonadata, scope=list(lower=null, upper=full4),
+     scale=fullMSE, direction="both")
+interactmod<- lm(MN_EARN_WNE_P10 ~ C150_4 + PCTFLOAN + COSTT4_A + 
+    MD_FAMINC + ADM_RATE_ALL + SAT_AVG + PCTPELL + C150_4:MD_FAMINC + 
+    C150_4:ADM_RATE_ALL, data = nonadata)
+summary(interactmod)
+```
+
+$\widehat{Earnings} = -1,018 + 42,260*Completion Rate-20,620*Percent Federal Loans+0.5718*Cost+0.3453*Median Family Income+5,764*Admission Rate+19.54*Average SAT Score+10,62*Percent Pell Grants-0.3567*Completion Rate*Family Income -26,330*Completion Rate*Admission Rate$
+
+An additional model was created incorporating interaction terms. We included the possible interactions between cost and median family income, percent of students receiving pell grants and percent receiving federal loans, completion rate and admission rate, median graduate debt and median family income, family income and percent receiving federal loans, and median family income and percent of students receiving pell grants. Stepwise regression was used to create a final model. 
+The final interaction model included completion rate, percent of students receiving federal loans, median family income, admission rate, average SAT score, percent of students receiving pell grants, and the interaction between completion rate and median family income and between completion rate and admission rate.
+
+```{r}
+plot(interactmod)
+```
+
+The interaction model was assessed for linearity, normality, and equal variance. The conditions were very similar to the original model, with linearity and equal variance being met based on the residual vs fitted values plot and the quantile-to-quantile plot indicating a lack of normality. The lack of independence remains, as in the model without interaction.
+
+
+#Results
+
+Based on the p-values and coefficients of our model without interaction, average completion rate, average cost of attendance, median family income, and average SAT score are positively associated with mean earnings 10 years after graduation, while percent of students on federal loans and average admission rate are negatively associated with mean earnings 10 years after graduation. The negative association and significant p-values between median family income, federal aid, and post graduation earnings allows us to reject the null hypothesis. The data provide evidence that schools with a lower average student financial status (lower family income, more federal aid) are correlated with lower earnings 10 years after graduation. The data also indicate that more “prestigious” schools (i.e. schools with a lower admission rate, a higher average cost of attendance, and higher test scores) are associated with higher earnings.
+
+In the final interaction model, admission rate is no longer a significant predictor of mean earnings 10 years after graduation. However, the interaction terms between median family income and completion rate and between completion rate and admission rate are significant.
+The significant interactions between median family income and completion rate indicate that the relationship between completion rate and mean earnings is moderated by family income. The relationship between completion rate and mean earnings is also moderated by admission rate. These findings shed light onto the ways that family income may affect mean earnings 10 years post graduation.
+
+#Discussion/Conclusion
+
+The final model illustrates that average student financial status and school prestige have significant relationships with earnings 10 years post-graduation. Common markers of family financial status, including median family income and percent of students receiving federal loans, were associated with mean earnings after graduation. Factors related to the prestige of a school, including completion rate, admission rate, cost, and average SAT scores, all factors that heavily weigh into a school's rank, were also significantly associated with mean earnings after graduation. These findings suggest that more prestigious schools with a generally wealthier student body are more likely to have alumni who make more money after graduating. 
+
+The interaction model demonstrates the ways that family income may be affecting mean earnings 10 years post-graduation. Based on this model, family income may be a moderator between completion rate and mean earnings. Specifically, this model predicts that, as a school's competion rate increases, the effect of median family income on earnings post-graduation decreases. Completion rate is a factor in school rankings, so this may indicate that higher prestige schools with higher completion rates can offset the effect of a student’s income. Studies suggest that students from low-income backgrounds are less likely to complete college once enrolled, therefore our findings suggest the importance of completion rate for low-income students. 
+
+Limitations of this study include the lack of complete data on private and trade schools, whcih caused us to focus only on public schools. Public schools are legally required to release information to College Scorecard, making them easier to study. We were also unable to find comprehensive data for college rank, so in the future we would recommend exploring the relationship between post graduation earnings and college rank. We believe, however, that acconting for admission rate, completion rate, and SAT score likely accounted for a great deal of the variation that might be attributed to college rank.
+
+These findings have several implications for equity in higher education. Because median family income was positively associated with post graduation earnings, it appears that attending college does not offset the effects of a student's familial financial status. More prestigious schools also had higher average post-graduate earnings, indicating that the caliber of a higher education institution may have a significant effect on earnings. The interaction model indicates that the interaction between completion rate and median family income is a significant predictor of mean earnings 10 years after graduation, indicating that completion rate may play a significant role in reducing the impact of family income on earnings.
+
+We recommend that a larger number of schools institute need-blind admissions policies and that a greater amount of funding be allocated to financial aid programs to allow students from all financial backgrounds to access high-caliber schools. Additionally, programs meant to support low-income students through the admission process and during their time in college, including free career counseling, interview attire borrowing programs, increased wages for work-study jobs, stipends for unpaid internships, and financial assistance for graduate school applications, may have a positive impact on the financial outcomes of low-income students. By helping low-income students complete college and succeed, we may be able to reduce the effects of income inequality on future generations.
+
+Citations:
+
+https://collegescorecard.ed.gov/
+
+https://www.bls.gov/news.release/hsgec.nr0.htm
+
+https://web.kamihq.com/web/viewer.html?source=extension_pdfhandler&file=http%3A%2F%2Fwww.hamiltonproject.org%2Fassets%2Flegacy%2Ffiles%2Fdownloads_and_links%2Fimpact_of_edu_earnings_inequality_hershbein_kearney_summers.pdf
+Also linked here: https://www.theatlantic.com/business/archive/2015/04/what-education-can-and-cant-do-for-economic-inequality/389754/
+
+
+
+
+#Multicollinearity: we will use COSTT4_A (average annual cost of tuition)
+
+```{r}
+nonadata%>%
+  select(COSTT4_A, NPT4_PUB)%>%
+  cor()
+
+nonadata%>%
+  select(PCTPELL, PCTFLOAN)%>%
+  cor()
+```
+
+
+
+
+
+# Stepwise with logMD_FAMINC
+
+```{r}
+
+logdata<-nonadata%>%
+  mutate(logMD_FAMINC = log(MD_FAMINC))
+
+full2<-lm(MN_EARN_WNE_P10~logMD_FAMINC+
+          ADM_RATE_ALL+
+             C150_4+
+             SAT_AVG
+           +GRAD_DEBT_MDN_SUPP
+           +COSTT4_A
+           +PFTFAC+
+             PCTPELL+
+             PCTFLOAN, data=logdata)
+step(null, data=nonadata, scope=list(lower=null, upper=full2),
+     scale=fullMSE, direction="both")
+```
+
+```{r}
+stepmod2<-lm(MN_EARN_WNE_P10 ~ C150_4 + PCTFLOAN + COSTT4_A + 
+    SAT_AVG + ADM_RATE_ALL + logMD_FAMINC, data = logdata)
+summary(stepmod2)
+```
+
+```{r}
+plot(stepmod2)
+```
+
+# Experimenting with higher order models
+
+```{r}
+hordmod1<-lm(MN_EARN_WNE_P10 ~ C150_4 + MD_FAMINC*PCTFLOAN + COSTT4_A*MD_FAMINC + C150_4*ADM_RATE_ALL + PCTFLOAN + COSTT4_A + 
+    SAT_AVG + ADM_RATE_ALL + MD_FAMINC, data = nonadata)
+summary(hordmod1)
+```
+
+# Stepwise with interaction terms
+
+```{r}
+full3<-lm(MN_EARN_WNE_P10~C150_4*ADM_RATE_ALL+ MD_FAMINC*PCTFLOAN + MD_FAMINC*COSTT4_A + GRAD_DEBT_MDN_SUPP*MD_FAMINC +PCTPELL*PCTFLOAN + PCTPELL*MD_FAMINC + MD_FAMINC+
+          ADM_RATE_ALL+
+             C150_4+
+             SAT_AVG
+           +GRAD_DEBT_MDN_SUPP
+           +COSTT4_A
+           +PFTFAC+
+             PCTPELL+
+             PCTFLOAN, data=nonadata)
+step(null, data=nonadata, scope=list(lower=null, upper=full3),
+     scale=fullMSE, direction="both")
+```
+
+```{r}
+full4<-lm(MN_EARN_WNE_P10~C150_4*ADM_RATE_ALL+ MD_FAMINC*PCTFLOAN + MD_FAMINC*COSTT4_A + GRAD_DEBT_MDN_SUPP*MD_FAMINC + ADM_RATE_ALL*MD_FAMINC + C150_4*MD_FAMINC + SAT_AVG*MD_FAMINC + SAT_AVG*ADM_RATE_ALL +PCTPELL*PCTFLOAN + PCTPELL*MD_FAMINC + MD_FAMINC+
+          ADM_RATE_ALL+
+             C150_4+
+             SAT_AVG
+           +GRAD_DEBT_MDN_SUPP
+           +COSTT4_A
+           +PFTFAC+
+             PCTPELL+
+             PCTFLOAN, data=nonadata)
+step(null, data=nonadata, scope=list(lower=null, upper=full4),
+     scale=fullMSE, direction="both")
+```
+
+
+#Checking Conditions
+
+```{r}
+plot(stepmod)
+```
+
+##VIF
+
+```{r}
+library(car)
+vif(full)
+vif(stepmod)
+```
+
+```{r}
+modcor3<-lm(PCTPELL~MD_FAMINC, data=nonadata)
+summary(modcor3)
+modcor4<-lm(PCTPELL~PCTFLOAN, data=nonadata)
+summary(modcor4)
+```
+
+
+#Nested F Test: testing subset of percent on pell and percent on a federal loan
+
+```{r}
+modelf<-lm(formula = MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 + 
+    SAT_AVG + COSTT4_A + PCTFLOAN + PCTPELL, data = nonadata)
+  
+modelr<-lm(formula = MN_EARN_WNE_P10 ~ MD_FAMINC + ADM_RATE_ALL + C150_4 + 
+    SAT_AVG + COSTT4_A, data = nonadata)
+
+anova(modelr, modelf)
+```
