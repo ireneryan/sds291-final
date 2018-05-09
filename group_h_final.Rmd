@@ -61,7 +61,7 @@ The explanatory variables include mean family income (dollars), total cost (tuit
 
 #Methods
 
-We selected our model using stepwise regression based on $R^2$. We decided compute the stepwise method because it accounts for both maintaining a high $R^2$ and keeping explanatory variables significant. Our final model included Completion Rate, the natural log of Median Family Income, Admission rate, Average SAT score, Average Cost of Attendance, and Percent of students on Federal Loans, all of which were significant at the 5% level. 
+We selected our model using stepwise regression based on $R^2$ and p-values. Stepwise model selection was chosen because it accounts for both maintaining a high $R^2$ and keeping explanatory variables significant. Our final model included completion rate, the natural log of median family income, admission rate, average SAT score, average cost of attendance, and percent of students on federal loans, all of which were significant at the 5% level. 
 
 ##Stepwise Regression
 ```{r}
@@ -132,44 +132,60 @@ plot(stepmod)
 
 We assessed the model for linearity, equal variance, normality, and independence. The model’s linearity and equal variance conditions are met, as shown by the residuals vs. fitted plot. However, normality does not appear to be satisfied, based on the normal quantile-to-quantile plot. The Median Family Income variable was right skewed, therefore we attempted several transformations in an attempt to improve normality. A log transformation improved the normality of the variable, however we saw little improvement in the normality of the model.  Additionally, we cannot assert that independence is met. The data is self-reported and federally required for public colleges, however, it is possible that schools within the same state may be dependent upon one another. Further, some of the schools in the dataset are geographically separate locations of the same college, therefore these cases are most likely not independent.
 
-#Results
-
-Based on the p-values and coefficients of our model, average completion rate, average cost of attendance, median family income, and average SAT score are positively associated with mean earnings 10 years after graduation, while percent of students on federal loans and average admission rate are negatively associated with mean earnings 10 years after graduation. The negative association between median family income, federal aid, and post graduation earnings allows us to reject the null hypothesis. The data provide evidence that schools with a lower average student financial status (lower family income, more federal aid) are correlated with lower earnings10 years after graduation. The data also indicate that more “prestigious” schools (i.e. schools with a lower admission rate, a higher average cost of attendance, and higher test scores) are associated with higher earnings. On the other hand, schools with a lower median family income and more students receiving federal aid are associated with lower earnings. 
 
 ## Interaction Model
 
-```{r}
-interactmod1<-lm(MN_EARN_WNE_P10 ~ C150_4 + PCTFLOAN + COSTT4_A + 
-    MD_FAMINC + ADM_RATE_ALL + SAT_AVG + PCTPELL + C150_4:ADM_RATE_ALL + 
-    PCTFLOAN:MD_FAMINC + COSTT4_A:MD_FAMINC + PCTFLOAN:PCTPELL, 
-    data = nonadata)
-summary(interactmod1)
-```
 
 ```{r}
-interactmod2<- lm(MN_EARN_WNE_P10 ~ C150_4 + PCTFLOAN + COSTT4_A + 
+full4<-lm(MN_EARN_WNE_P10~C150_4*ADM_RATE_ALL+ MD_FAMINC*PCTFLOAN + MD_FAMINC*COSTT4_A + GRAD_DEBT_MDN_SUPP*MD_FAMINC + ADM_RATE_ALL*MD_FAMINC + C150_4*MD_FAMINC + SAT_AVG*MD_FAMINC + SAT_AVG*ADM_RATE_ALL +PCTPELL*PCTFLOAN + PCTPELL*MD_FAMINC + MD_FAMINC+
+          ADM_RATE_ALL+
+             C150_4+
+             SAT_AVG
+           +GRAD_DEBT_MDN_SUPP
+           +COSTT4_A
+           +PFTFAC+
+             PCTPELL+
+             PCTFLOAN, data=nonadata)
+step(null, data=nonadata, scope=list(lower=null, upper=full4),
+     scale=fullMSE, direction="both")
+interactmod<- lm(MN_EARN_WNE_P10 ~ C150_4 + PCTFLOAN + COSTT4_A + 
     MD_FAMINC + ADM_RATE_ALL + SAT_AVG + PCTPELL + C150_4:MD_FAMINC + 
     C150_4:ADM_RATE_ALL, data = nonadata)
-summary(interactmod2)
+summary(interactmod)
 ```
 
-$\widehat{Earnings} = 21,970 +.09144*Median Family Income - 6,441*Admission Rate + 11,400*Completion Rate + 16.66*Average SAT + .5526*Average Cost of Attendance - 16,470*Percent On Federal Loan$
+$\widehat{Earnings} = -1,018 + 42,260*Completion Rate-20,620*Percent Federal Loans+0.5718*Cost+0.3453*Median Family Income+5,764*Admission Rate+19.54*Average SAT Score+10,62*Percent Pell Grants-0.3567*Completion Rate*Family Income -26,330*Completion Rate*Admission Rate$
 
-An additional model was created incorporating interaction terms. We included the possible interactions between cost and median family income, percent of students receiving pell grants and percent receiving federal loans, completion rate and admission rate, median graduate debt and median family income, family income and percent receiving federal loans, and median family income and percent of students receiving pell grants. Stepwise regression was used to create a final model.
+An additional model was created incorporating interaction terms. We included the possible interactions between cost and median family income, percent of students receiving pell grants and percent receiving federal loans, completion rate and admission rate, median graduate debt and median family income, family income and percent receiving federal loans, and median family income and percent of students receiving pell grants. Stepwise regression was used to create a final model. 
+The final interaction model included completion rate, percent of students receiving federal loans, median family income, admission rate, average SAT score, percent of students receiving pell grants, and the interaction between completion rate and median family income and between completion rate and admission rate.
+
+```{r}
+plot(interactmod)
+```
+
+The interaction model was assessed for linearity, normality, and equal variance. The conditions were very similar to the original model, with linearity and equal variance being met based on the residual vs fitted values plot and the quantile-to-quantile plot indicating a lack of normality. The lack of independence remains, as in the model without interaction.
+
+
+#Results
+
+Based on the p-values and coefficients of our model without interaction, average completion rate, average cost of attendance, median family income, and average SAT score are positively associated with mean earnings 10 years after graduation, while percent of students on federal loans and average admission rate are negatively associated with mean earnings 10 years after graduation. The negative association and significant p-values between median family income, federal aid, and post graduation earnings allows us to reject the null hypothesis. The data provide evidence that schools with a lower average student financial status (lower family income, more federal aid) are correlated with lower earnings 10 years after graduation. The data also indicate that more “prestigious” schools (i.e. schools with a lower admission rate, a higher average cost of attendance, and higher test scores) are associated with higher earnings.
 
 In the final interaction model, admission rate is no longer a significant predictor of mean earnings 10 years after graduation. However, the interaction terms between median family income and completion rate and between completion rate and admission rate are significant.
 The significant interactions between median family income and completion rate indicate that the relationship between completion rate and mean earnings is moderated by family income. The relationship between completion rate and mean earnings is also moderated by admission rate. These findings shed light onto the ways that family income may affect mean earnings 10 years post graduation.
 
 #Discussion/Conclusion
 
+The final model illustrates that average student financial status and school prestige have significant relationships with earnings 10 years post-graduation. Common markers of family financial status, including median family income and percent of students receiving federal loans, were associated with mean earnings after graduation. Factors related to the prestige of a school, including completion rate, admission rate, cost, and average SAT scores, all factors that heavily weigh into a school's rank, were also significantly associated with mean earnings after graduation. These findings suggest that more prestigious schools with a generally wealthier student body are more likely to have alumni who make more money after graduating. 
 
-The interaction model demonstrates the ways that family income may be affecting mean earnings 10 years post-graduation. Based on this model, family income may be a moderator between completion rate and mean earnings. Specifically, this model predicts that, for schools with higher completion rates, family income has less of an effect on mean earnings 10 years post-graduation. 
-
-The interaction between completion rate and median family income is negative, indicating that as a as a school’s completion rate increases, the effect of median family income decreases. Completion rate is often used as a measure of a school’s prestige, so this may indicate that higher prestige schools can offset the effect of a student’s income, however it also could mean these institutions are discriminatory and are making it harder for low income students to reach graduation.
+The interaction model demonstrates the ways that family income may be affecting mean earnings 10 years post-graduation. Based on this model, family income may be a moderator between completion rate and mean earnings. Specifically, this model predicts that, as a school's competion rate increases, the effect of median family income on earnings post-graduation decreases. Completion rate is a factor in school rankings, so this may indicate that higher prestige schools with higher completion rates can offset the effect of a student’s income. Studies suggest that students from low-income backgrounds are less likely to complete college once enrolled, therefore our findings suggest the importance of completion rate for low-income students. 
 
 The implication of our findings are significant. Is college really the leveling tool we think it is? Because median family income was negatively associated with post graduation earnings, it appears that college isn’t enough to offset a student’s economic status. Institutions should take this into consideration when awarding scholarships and planning financial accessibility measures.
 
-One limitation of this study was the lack of complete data, because we were unable to include private schools and trade schools. We were also unable to find comprehensive data for college rank, so in the future we would recommend exploring the relationship between post graduation earnings and college rank. 
+Limitations of this study include the lack of complete data on private and trade schools, whcih caused us to focus only on public schools. Public schools are legally required to release information to College Scorecard, making them easier to study. We were also unable to find comprehensive data for college rank, so in the future we would recommend exploring the relationship between post graduation earnings and college rank. We believe, however, that acconting for admission rate, completion rate, and SAT score likely accounted for a great deal of the variation that might be attributed to college rank.
+
+These findings have several implications for equity in higher education. Because median family income was positively associated with post graduation earnings, it appears that attending college does not offset the effects of a student's familial financial status. More prestigious schools also had higher average post-graduate earnings, indicating that the caliber of a higher education institution may have a significant effect on earnings. The interaction model indicates that the interaction between completion rate and median family income is a significant predictor of mean earnings 10 years after graduation, indicating that completion rate may play a significant role in reducing the impact of family income on earnings.
+
+We recommend that a larger number of schools institute need-blind admissions policies and that a greater amount of funding be allocated to financial aid programs to allow students from all financial backgrounds to access high-caliber schools. Additionally, programs meant to support low-income students through the admission process and during their time in college, including free career counseling, interview attire borrowing programs, increased wages for work-study jobs, stipends for unpaid internships, and financial assistance for graduate school applications, may have a positive impact on the financial outcomes of low-income students. By helping low-income students complete college and succeed, we may be able to reduce the effects of income inequality on future generations.
 
 Citations:
 
